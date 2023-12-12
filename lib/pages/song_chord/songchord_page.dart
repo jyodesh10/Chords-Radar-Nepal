@@ -16,7 +16,7 @@ class _SongchordPageState extends State<SongchordPage> {
   void initState() {
     super.initState();
     controller = ScrollController()..addListener(() { 
-      print(controller.position.maxScrollExtent.toString());
+      debugPrint(controller.position.maxScrollExtent.toString());
     });
   }
   @override
