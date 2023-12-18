@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "204219200184",
+    "project_id": "chord-radar-nepal",
+    "storage_bucket": "chord-radar-nepal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204219200184:android:d6b5192da09ef2827f3a4d",
+        "android_client_info": {
+          "package_name": "com.zyodes.chord_radar_nepal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDaYJBIWHF0SLq_QGDbhYvOW3LWW9x2wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
