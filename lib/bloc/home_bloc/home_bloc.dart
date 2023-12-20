@@ -1,7 +1,8 @@
+import 'package:chord_radar_nepal/helpers/firebase_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../helpers/db_helper.dart';
+// import '../../helpers/db_helper.dart';
 import '../../model/songs_model.dart';
 
 part 'home_event.dart';
@@ -12,7 +13,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SongsEvent>((event, emit) async {
       try {
         emit(HomeLoadingState());
-        final data = await DBhelper().readDb();
+        final data = await FirebaseHelper().getSongs(); 
+        // await DBhelper().readDb();
         if(data.isNotEmpty){
           emit(HomeLoadedState(songs: data));
         }else{

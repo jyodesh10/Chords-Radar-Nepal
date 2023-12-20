@@ -5,10 +5,19 @@ import '../model/songs_model.dart';
 
 
 class FirebaseHelper {
-  CollectionReference wishlist = FirebaseFirestore.instance.collection('songs');
-  Future<void> addToWishlist(SongsModel product) async {
+  final _firestore = FirebaseFirestore.instance;
+  CollectionReference songs = FirebaseFirestore.instance.collection('songs');
+
+  Future<List<SongsModel>> getSongs() async {
+    QuerySnapshot<Map<String, dynamic>> data =
+        await _firestore.collection('songs').get();
+    log(data.docs.toString());
+    return data.docs.map((e) => SongsModel.fromDocumentSnapshot(e)).toList();
+  }
+
+  Future<void> addToFBdatabase(SongsModel product) async {
     // Check if the product already exists in the cart
-    QuerySnapshot existingProducts = await wishlist.where('id', isEqualTo: product.id).get();
+    QuerySnapshot existingProducts = await songs.where('id', isEqualTo: product.id).get();
 
     if (existingProducts.docs.isNotEmpty) {
       
@@ -29,7 +38,7 @@ class FirebaseHelper {
         "apId": product.apId,
       };
 
-      await wishlist.doc().set(productData).then((value) => 
+      await songs.doc().set(productData).then((value) => 
         log("Added new product to wishlist: ${product.title}")
       );
     }

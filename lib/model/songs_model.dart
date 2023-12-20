@@ -1,3 +1,6 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class SongsModel {
   final int id;
   final String singer;
@@ -56,4 +59,18 @@ class SongsModel {
       apId: apId ?? this.apId,
     );
   }
+
+  SongsModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> map)
+    : id = map['id'],
+      singer = map['singer'],
+      title = map['title'],
+      album = map['album'],
+      favourite = map['favourite'],
+      favTimeStamp = DateTime.now(),
+      timeStamp = DateTime.now(),
+      category = map['category'],
+      contributer = map['contributer'],
+      content = map['content'],
+      videoId = map['videoId'],
+      apId = map['apId'];
 }
