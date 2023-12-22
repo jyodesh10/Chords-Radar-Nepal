@@ -34,17 +34,13 @@ class DBhelper {
     List<Map<String, dynamic>> result = await database.query('song');
     return List.generate(result.length, (index) => SongsModel(
       id: result[index]['id'], 
-      singer: result[index]['singer'] ?? "", 
+      artist: result[index]['singer'] ?? "", 
       title: result[index]['title'] ?? "", 
       album: result[index]['album'] ?? "", 
-      favourite: result[index]['favourite'], 
-      favTimeStamp: DateTime.parse(result[index]['fav_timestamp'].toString()), 
       timeStamp: DateTime.parse(result[index]['timestamp']), 
       category: result[index]['category'] ?? "", 
-      contributer: result[index]['contributor']?? "", 
       content: result[index]['content'] ?? "", 
-      videoId: result[index]['video_id'] ?? "", 
-      apId: result[index]['api_id'] ?? 0
+      docId: '', 
     ));
   }
 }

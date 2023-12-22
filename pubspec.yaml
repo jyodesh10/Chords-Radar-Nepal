@@ -44,6 +44,7 @@ dependencies:
   equatable: ^2.0.5
   google_fonts: ^6.1.0
   fluentui_system_icons: ^1.1.223
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

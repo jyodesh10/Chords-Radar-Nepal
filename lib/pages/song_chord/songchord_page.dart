@@ -14,14 +14,21 @@ class SongchordPage extends StatefulWidget {
 
 class _SongchordPageState extends State<SongchordPage> {
   late ScrollController controller;
+  bool autoScroll = false;
+  int scrollTime = 6;
+  double sliderval = 0.1;
 
   @override
   void initState() {
     super.initState();
     controller = ScrollController()..addListener(() { 
-      debugPrint(controller.position.maxScrollExtent.toString());
+      // debugPrint(controller.offset.toString());
+      if(autoScroll) {
+        // controller.animateTo(controller.position.maxScrollExtent, duration: Duration(seconds: (controller.position.maxScrollExtent.round().toInt()/scrollTime).round()), curve: Curves.ease);
+      }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +38,14 @@ class _SongchordPageState extends State<SongchordPage> {
           controller: controller,
           child: Stack(
             children: [
+              //contexnt lyrics chords
               Container(
-                padding: const EdgeInsets.all(10.0).copyWith(top: 200),
+                padding: const EdgeInsets.all(10.0).copyWith(top: 200, bottom: 100),
                 width: double.infinity,
                 color: AppColors.charcoal,
                 child: Text(widget.song.content.toString(), style: subtitleStyle.copyWith(color: AppColors.white), ),
               ),
+              //top
               Container(
                 height: 130,
                 color: AppColors.deepTeal,
@@ -50,14 +59,21 @@ class _SongchordPageState extends State<SongchordPage> {
                       title: Text(widget.song.title,overflow: TextOverflow.ellipsis, style: titleStyle, ),
                       trailing: IconButton(
                         onPressed: () {
-                          controller.animateTo(controller.position.maxScrollExtent, duration: Duration(seconds: (controller.position.maxScrollExtent.round().toInt()/13).round()), curve: Curves.ease);
+                          controller.animateTo(200, duration: const Duration(milliseconds: 250), curve: Curves.ease).whenComplete(() => 
+                            animate()
+                          );
+                          setState(() {
+                            autoScroll = true;
+                          });
                         },
+                        tooltip: "Autoplay",
                         icon: const Icon(FluentIcons.play_circle_48_regular, size: 40, color: AppColors.charcoal,), 
                       ),
                     )
                   ],
                 ),
               ),
+              //mid song & artist info
               Container(
                 margin: const EdgeInsets.all(30).copyWith(top: 70),
                 height: 125,
@@ -102,7 +118,7 @@ class _SongchordPageState extends State<SongchordPage> {
                         children: [
                           Text(widget.song.title,overflow: TextOverflow.ellipsis, maxLines: 2, style: titleStyle.copyWith(fontSize: 16),),
                           const SizedBox(height: 5,),
-                          Text(widget.song.singer,overflow: TextOverflow.ellipsis, style: subtitleStyle.copyWith(color: AppColors.white),),
+                          Text(widget.song.artist,overflow: TextOverflow.ellipsis, style: subtitleStyle.copyWith(color: AppColors.white),),
                         ],
                       ),
                     ),
@@ -123,6 +139,49 @@ class _SongchordPageState extends State<SongchordPage> {
           ),
         ),
       ),
+      floatingActionButton: autoScroll
+        ? Container(
+          color: AppColors.deepTeal,
+          alignment: Alignment.center,
+          height: 60,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: Slider(
+                  activeColor: AppColors.gunmetal,
+                  value: sliderval, 
+                  onChanged: (value) {
+                    debugPrint((value*100).round().toString());
+                    setState(() {
+                      sliderval = value;
+                      scrollTime = (5 + (value * 100)).round();
+                      animate();
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      autoScroll = false;
+                      controller.animateTo(0, duration: const Duration(milliseconds: 250), curve: Curves.ease);
+                    });
+                  }, 
+                  icon: const Icon(FluentIcons.pause_48_filled)
+                ) 
+              )
+            ],
+          ),
+        ) 
+        : const SizedBox(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  animate() {
+    controller.animateTo(controller.position.maxScrollExtent, duration: Duration(seconds: /* scrollTime */ (controller.position.maxScrollExtent.round().toInt()/scrollTime).round()), curve: Curves.ease);
   }
 }

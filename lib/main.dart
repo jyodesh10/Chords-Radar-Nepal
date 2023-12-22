@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeBloc()..add(const SongsEvent()), 
+          create: (context) => HomeBloc()..add(const SongsEvent(filterBy: 'docId')), 
         )
       ],
       child: MaterialApp(

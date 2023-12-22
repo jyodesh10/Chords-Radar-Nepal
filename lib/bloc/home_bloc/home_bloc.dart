@@ -13,7 +13,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SongsEvent>((event, emit) async {
       try {
         emit(HomeLoadingState());
-        final data = await FirebaseHelper().getSongs(); 
+        final data = await FirebaseHelper().getSongs(event.filterBy); 
         // await DBhelper().readDb();
         if(data.isNotEmpty){
           emit(HomeLoadedState(songs: data));

@@ -8,9 +8,10 @@ abstract class HomeEvent extends Equatable {
 }
 
 class SongsEvent extends HomeEvent {
-  const SongsEvent();
+  const SongsEvent({required this.filterBy});
+  final String filterBy;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [filterBy];
 
 }

@@ -8,11 +8,17 @@ class FirebaseHelper {
   final _firestore = FirebaseFirestore.instance;
   CollectionReference songs = FirebaseFirestore.instance.collection('songs');
 
-  Future<List<SongsModel>> getSongs() async {
+  Future<List<SongsModel>> getSongs(String orderBy) async {
     QuerySnapshot<Map<String, dynamic>> data =
-        await _firestore.collection('songs').get();
+        await _firestore.collection('songs').orderBy(orderBy).get();
     log(data.docs.toString());
     return data.docs.map((e) => SongsModel.fromDocumentSnapshot(e)).toList();
+  }
+
+  Future deleteSong(String docId) async {
+    await _firestore.collection('songs').doc(docId).delete().whenComplete(() => 
+      log("delete $docId")
+    );
   }
 
   Future<void> addToFBdatabase(SongsModel product) async {
@@ -23,22 +29,20 @@ class FirebaseHelper {
       
     } else {
       // Product does not exist in the cart; add it
+      DocumentReference docRef = FirebaseFirestore.instance.collection('songs').doc();
+
       Map<String, dynamic> productData = {
         "id": product.id,
-        "singer": product.singer,
+        "docId": docRef.id,
+        "artist": product.artist,
         "title": product.title,
         "album": product.album,
-        "favourite": product.favourite,
-        "favTimeStamp": product.favTimeStamp,
         "timeStamp": product.timeStamp,
         "category": product.category,
-        "contributer": product.contributer,
         "content": product.content,
-        "videoId": product.videoId,
-        "apId": product.apId,
       };
 
-      await songs.doc().set(productData).then((value) => 
+      await songs.doc(docRef.id).set(productData).then((value) => 
         log("Added new product to wishlist: ${product.title}")
       );
     }
