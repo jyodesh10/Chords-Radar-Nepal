@@ -11,7 +11,6 @@ class FirebaseHelper {
   Future<List<SongsModel>> getSongs(String orderBy) async {
     QuerySnapshot<Map<String, dynamic>> data =
         await _firestore.collection('songs').orderBy(orderBy).get();
-    log(data.docs.toString());
     return data.docs.map((e) => SongsModel.fromDocumentSnapshot(e)).toList();
   }
 

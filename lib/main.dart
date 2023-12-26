@@ -1,3 +1,5 @@
+import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
+import 'package:chord_radar_nepal/model/songs_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +11,9 @@ import 'pages/home/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await DBhelper().copyDatabaseToDevice();
+  // await DBhelper().copyDatabaseToDevice();
+  // await DBhelper().initialize();
+  await DatabaseConnection().setDatabase();
   runApp(const MyApp());
 }
 
@@ -20,8 +24,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+        BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(const SongsEvent(filterBy: 'docId')), 
+        ),
+        BlocProvider<FavoritesCubit>(
+          create: (context) => FavoritesCubit().readDb(), 
         )
       ],
       child: MaterialApp(

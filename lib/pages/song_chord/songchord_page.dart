@@ -1,3 +1,4 @@
+import 'package:chord_radar_nepal/helpers/db_helper.dart';
 import 'package:chord_radar_nepal/model/songs_model.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,9 @@ import 'package:flutter/material.dart';
 import '../../constants/constants.dart';
 
 class SongchordPage extends StatefulWidget {
-  const SongchordPage({super.key, required this.song});
+  const SongchordPage({super.key, required this.song, required this.savedSongs});
   final SongsModel song;
+  final List<SongsModel> savedSongs;
 
   @override
   State<SongchordPage> createState() => _SongchordPageState();
@@ -39,11 +41,15 @@ class _SongchordPageState extends State<SongchordPage> {
           child: Stack(
             children: [
               //contexnt lyrics chords
-              Container(
-                padding: const EdgeInsets.all(10.0).copyWith(top: 200, bottom: 100),
-                width: double.infinity,
-                color: AppColors.charcoal,
-                child: Text(widget.song.content.toString(), style: subtitleStyle.copyWith(color: AppColors.white), ),
+              InteractiveViewer(
+                minScale: 0.1,
+                maxScale: 1.6,
+                child: Container(
+                  padding: const EdgeInsets.all(10.0).copyWith(top: 200, bottom: 100),
+                  width: double.infinity,
+                  color: AppColors.charcoal,
+                  child: Text(widget.song.content.toString(), style: subtitleStyle.copyWith(color: AppColors.white), ),
+                ),
               ),
               //top
               Container(
@@ -127,7 +133,14 @@ class _SongchordPageState extends State<SongchordPage> {
                     ),
                     Expanded(
                       flex: 1,
-                      child: IconButton(onPressed: () {}, icon: const Icon(FluentIcons.heart_48_filled) ),
+                      child: IconButton(
+                        onPressed: () {
+                          DBhelper().writeFavDb(widget.song);
+                        }, 
+                        icon: Icon(FluentIcons.heart_48_filled, 
+                        color: widget.savedSongs.map((e) => e.docId).toList().contains(widget.song.docId)  ? Colors.red.shade400 : AppColors.charcoal, 
+                        ) 
+                      ),
                     ),
                     const SizedBox(
                       width: 10,

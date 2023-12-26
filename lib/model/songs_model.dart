@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SongsModel {
@@ -25,18 +27,17 @@ class SongsModel {
   SongsModel copyWith({
     int? id,
     String? docId,
-    String? singer,
+    String? artist,
     String? title,
     String? album,
     DateTime? timeStamp,
     String? category,
     String? content,
-
   }) {
     return SongsModel(
       id: id ?? this.id,
-      artist: singer ?? artist,
       docId: docId ?? this.docId,
+      artist: artist ?? this.artist,
       title: title ?? this.title,
       album: album ?? this.album,
       timeStamp: timeStamp ?? this.timeStamp,
@@ -54,4 +55,66 @@ class SongsModel {
       timeStamp = DateTime.now(),
       category = map['category'],
       content = map['content'];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'docId': docId,
+      'artist': artist,
+      'title': title,
+      'album': album,
+      'timeStamp': timeStamp.millisecondsSinceEpoch,
+      'category': category,
+      'content': content,
+    };
+  }
+
+  factory SongsModel.fromMap(Map<String, dynamic> map) {
+    return SongsModel(
+      id: map['id']?.toInt() ?? 0,
+      docId: map['docId'] ?? '',
+      artist: map['artist'] ?? '',
+      title: map['title'] ?? '',
+      album: map['album'] ?? '',
+      timeStamp: DateTime.fromMillisecondsSinceEpoch(map['timeStamp']),
+      category: map['category'] ?? '',
+      content: map['content'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SongsModel.fromJson(String source) => SongsModel.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'SongsModel(id: $id, docId: $docId, artist: $artist, title: $title, album: $album, timeStamp: $timeStamp, category: $category, content: $content)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is SongsModel &&
+      other.id == id &&
+      other.docId == docId &&
+      other.artist == artist &&
+      other.title == title &&
+      other.album == album &&
+      other.timeStamp == timeStamp &&
+      other.category == category &&
+      other.content == content;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      docId.hashCode ^
+      artist.hashCode ^
+      title.hashCode ^
+      album.hashCode ^
+      timeStamp.hashCode ^
+      category.hashCode ^
+      content.hashCode;
+  }
 }

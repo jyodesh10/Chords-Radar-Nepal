@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/helpers/db_helper.dart';
+import 'package:chord_radar_nepal/pages/saved_songs/saved_songs_page.dart';
 import 'package:chord_radar_nepal/pages/song_chord/songchord_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,19 +27,39 @@ class _HomePageState extends State<HomePage> {
     readDb();
   }
 
-  List<SongsModel> result = [];
+  List<SongsModel> favs = [];
   readDb() async {
-    result = await DBhelper().readDb();
-    log(result.length.toString());
+    favs = await DBhelper().readFavDb();
+    log(favs.length.toString());
   }
+
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: AppColors.deepTeal,
       // appBar: AppBar(
       //   title: const Text("Chord Radar Nepal"),
       // ),
+      drawer: Drawer(
+        backgroundColor: AppColors.charcoal,
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: AppColors.deepTeal
+              ),
+              child: Container()),
+            ListTile(
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SavedSongsPage(songs: favs),)),
+              leading: const Icon(FluentIcons.arrow_circle_down_right_24_regular, color: AppColors.white,),
+              title: Text("Saved", style: titleStyle, ),
+            )
+          ],
+        ),
+      ),
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
@@ -65,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        SongchordPage(song: result[index]),
+                                        SongchordPage(song: result[index], savedSongs: favs),
                                   ));
                             },
                             title: Text(result[index].title.toString(), style: titleStyle.copyWith(fontSize: 15), ),
@@ -121,6 +142,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: AppColors.deepTeal,
             child: const Icon(FluentIcons.filter_32_filled, color: AppColors.white,),
             onPressed: () {
+              debugPrint(favs.toString());
               showDialog(
                 context: context, 
                 builder: (context) => Dialog(
@@ -179,12 +201,24 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Good Evening,\nUser", style: titleStyle,),
               IconButton(
-                onPressed: (){}, 
-                icon: const Icon(FluentIcons.settings_48_filled, size: 35, color: AppColors.gunmetal,) 
+                onPressed: () {
+                  scaffoldKey.currentState!.openDrawer();
+                }, 
+                icon: const Icon(Icons.menu, size: 30,)
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Text("Good Evening,\nUser", style: titleStyle,),
+              const Spacer(),
+              Builder(builder: (context) => 
+                IconButton(
+                  onPressed: (){}, 
+                  icon: const Icon(FluentIcons.settings_48_filled, size: 35, color: AppColors.gunmetal,) 
+                )
               )
             ],
           ),

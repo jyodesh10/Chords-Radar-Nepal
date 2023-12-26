@@ -1,11 +1,24 @@
+import 'dart:developer';
+
 import 'package:chord_radar_nepal/model/songs_model.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBhelper {
+
+  static Database? _database;
+  Future<Database?>get database async {
+    if (_database != null) {
+      return _database;
+    } else {
+      _database = await DatabaseConnection().setDatabase();
+      return _database;
+    }
+  }
+
   Future<void> copyDatabaseToDevice() async {
     String documentsDirectory = (await getApplicationDocumentsDirectory()).path;
     // Get the path to the documents directory.
@@ -40,7 +53,48 @@ class DBhelper {
       timeStamp: DateTime.parse(result[index]['timestamp']), 
       category: result[index]['category'] ?? "", 
       content: result[index]['content'] ?? "", 
-      docId: '', 
+      docId: result[index]['docId'] ?? "", 
     ));
   }
+
+  Future writeFavDb(SongsModel song) async {
+    var db = await database;
+    db!.insert('songs',
+      song.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace  
+    ).whenComplete(() => 
+      log("Favourite ${song.title}")
+    );
+  }
+
+  Future<List<SongsModel>> readFavDb() async {
+    var db = await database;
+    List<Map<String, dynamic>> result = await db!.query('songs');
+    return List.generate(result.length, (index) => SongsModel(
+      id: result[index]['id'], 
+      artist: result[index]['artist'] ?? "", 
+      title: result[index]['title'] ?? "", 
+      album: result[index]['album'] ?? "", 
+      timeStamp: DateTime.now(), 
+      category: result[index]['category'] ?? "", 
+      content: result[index]['content'] ?? "", 
+      docId: result[index]['docId'] ?? "", 
+    ));
+  }
+}
+
+
+class DatabaseConnection{
+	Future<Database>setDatabase() async {
+		var directory = await getApplicationDocumentsDirectory();
+		var path = join(directory.path, 'songs_db');
+		var database =
+		await openDatabase(path, version: 1, onCreate: _createDatabase);
+		return database;
+	}
+
+	Future<void>_createDatabase(Database database, int version) async {
+		String sql= 'CREATE TABLE songs(id INTEGER, artist TEXT NULL, title TEXT NULL, album TEXT NULL, timeStamp DATETIME NULL, category TEXT NULL,content TEXT NULL,docId TEXT)';
+		await database.execute(sql);
+	}
 }
