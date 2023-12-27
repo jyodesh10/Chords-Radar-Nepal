@@ -28,3 +28,11 @@ class FavoritesLoadingState extends FavoritesState {}
 
 class FavoritesErrorState extends FavoritesState {}
 
+class SnackBarState extends FavoritesState {
+  const SnackBarState(this.msg);
+  final String msg;
+
+  @override
+  List<Object> get props => [msg];
+}
+

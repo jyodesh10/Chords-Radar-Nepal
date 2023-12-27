@@ -21,8 +21,18 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   writeDb(SongsModel song) async {
-    await DBhelper().writeFavDb(song);
-    readDb();
+    await DBhelper().writeFavDb(song).whenComplete(() {
+      emit(const SnackBarState("Saved Offlne"));
+      readDb();
+    }
+    );
+  }
+  deleteDb(SongsModel song) async {
+    await DBhelper().deleteFavDb(song).whenComplete(() {
+      emit(const SnackBarState("Removed Saved"));
+      readDb();
+    }
+    );
   }
 
 }

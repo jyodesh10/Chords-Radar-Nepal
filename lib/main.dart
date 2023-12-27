@@ -1,5 +1,4 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
-import 'package:chord_radar_nepal/model/songs_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,10 +24,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<HomeBloc>(
-          create: (context) => HomeBloc()..add(const SongsEvent(filterBy: 'docId')), 
+          create: (context) => HomeBloc()..add(const SongsEvent(filterBy: 'title')), 
         ),
         BlocProvider<FavoritesCubit>(
-          create: (context) => FavoritesCubit().readDb(), 
+          create: (context) => FavoritesCubit()..readDb(), 
         )
       ],
       child: MaterialApp(

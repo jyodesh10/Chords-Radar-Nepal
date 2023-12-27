@@ -61,9 +61,19 @@ class DBhelper {
     var db = await database;
     db!.insert('songs',
       song.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace  
+      conflictAlgorithm: ConflictAlgorithm.ignore  
     ).whenComplete(() => 
       log("Favourite ${song.title}")
+    );
+  }
+
+  Future deleteFavDb(SongsModel song) async {
+    var db = await database;
+    db!.delete('songs',
+      where: 'docId=?',
+      whereArgs: [song.docId]
+    ).whenComplete(() => 
+      log("delete ${song.title}")
     );
   }
 

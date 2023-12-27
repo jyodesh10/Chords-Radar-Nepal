@@ -1,14 +1,15 @@
+import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
 import 'package:chord_radar_nepal/constants/constants.dart';
-import 'package:chord_radar_nepal/model/songs_model.dart';
+import 'package:chord_radar_nepal/widgets/snackbar_widget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../widgets/shimmer_widget.dart';
 import '../song_chord/songchord_page.dart';
 
 class SavedSongsPage extends StatefulWidget {
-  const SavedSongsPage({super.key, required this.songs});
-
-  final List<SongsModel> songs;
+  const SavedSongsPage({super.key});
 
   @override
   State<SavedSongsPage> createState() => _SavedSongsPageState();
@@ -22,37 +23,70 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
       appBar: AppBar(
         backgroundColor: AppColors.deepTeal,
         leading: IconButton(
-          onPressed: () { Navigator.pop(context); }, 
-          icon: const Icon(FluentIcons.arrow_circle_left_48_regular, size: 40, color: AppColors.charcoal,),
-        ),
-        title: Text("Saved",overflow: TextOverflow.ellipsis, style: titleStyle, ),
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: widget.songs.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              tileColor: AppColors.charcoal,
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          SongchordPage(song: widget.songs[index], savedSongs: widget.songs),
-                    ));
-              },
-              title: Text(widget.songs[index].title.toString(), style: titleStyle.copyWith(fontSize: 15), ),
-              subtitle: Text(widget.songs[index].artist.toString(), style: subtitleStyle),
-
-              //delete
-              trailing: IconButton(
-                onPressed: () {}, 
-                icon: const Icon(Icons.delete)),
-            );
+          onPressed: () {
+            Navigator.pop(context);
           },
+          icon: const Icon(
+            FluentIcons.arrow_circle_left_48_regular,
+            size: 40,
+            color: AppColors.charcoal,
+          ),
         ),
+        title: Text(
+          "Saved",
+          overflow: TextOverflow.ellipsis,
+          style: titleStyle,
+        ),
+      ),
+      body: BlocConsumer<FavoritesCubit, FavoritesState>(
+        listener: (context, state) {
+          if(state is SnackBarState) {
+            showSnackbar(context, state.msg);
+          }
+        },
+        builder: (context, state) {
+          if(state is FavoritesLoadingState) {
+            return const ShimmerWidget();
+          }
+          if(state is FavoritesLoadedState) {
+            return SafeArea(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.songs.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    tileColor: AppColors.charcoal,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SongchordPage(
+                                song: state.songs[index]
+                                ),
+                          ));
+                    },
+                    title: Text(
+                      state.songs[index].title.toString(),
+                      style: titleStyle.copyWith(fontSize: 15),
+                    ),
+                    subtitle: Text(state.songs[index].artist.toString(),
+                        style: subtitleStyle),
+
+                    //delete
+                    trailing: IconButton(
+                        onPressed: () {
+                          BlocProvider.of<FavoritesCubit>(context)
+                              .deleteDb(state.songs[index]);
+                        },
+                        icon: const Icon(Icons.delete)),
+                  );
+                },
+              ),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
