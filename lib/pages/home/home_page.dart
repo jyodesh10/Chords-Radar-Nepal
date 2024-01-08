@@ -3,6 +3,7 @@ import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/pages/saved_songs/saved_songs_page.dart';
 import 'package:chord_radar_nepal/pages/search/search_page.dart';
 import 'package:chord_radar_nepal/pages/song_chord/songchord_page.dart';
+import 'package:chord_radar_nepal/pages/tuner/tuner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,6 +12,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import '../../model/songs_model.dart';
 import '../../widgets/time_greetings.dart';
+import 'add_songs_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -69,6 +71,21 @@ class _HomePageState extends State<HomePage> {
                 }
                 return Container();
               },
+            ),
+            ListTile(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TunerPage(),
+                  )),
+              leading: const Icon(
+                FluentIcons.music_note_1_24_regular,
+                color: AppColors.white,
+              ),
+              title: Text(
+                "Tuner",
+                style: titleStyle,
+              ),
             )
           ],
         ),
@@ -140,20 +157,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // FloatingActionButton(
-          //   heroTag: "f1",
-          //   onPressed: () async {
-          //     try {
-          //       for (var i = 0; i < result.length; i++) {
-          //         await FirebaseHelper().addToFBdatabase(result[i]).whenComplete(() =>
-          //           log("Complte $i")
-          //         );
-          //       }
-          //     } finally {
-          //       log("Compoletr");
-          //     }
-          //   }
-          // ),
+          FloatingActionButton(
+            heroTag: "f1",
+            child: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AddSongsPage(),) );
+            }
+          ),
           FloatingActionButton(
               heroTag: "f2",
               backgroundColor: AppColors.deepTeal,

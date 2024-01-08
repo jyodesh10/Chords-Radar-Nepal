@@ -46,6 +46,14 @@ dependencies:
   fluentui_system_icons: ^1.1.223
   shimmer: ^3.0.0
   path: ^1.8.3
+  intl: ^0.19.0
+  animated_text_kit: ^4.2.2
+  internet_connection_checker_plus: ^2.1.0
+  pitch_detector_dart: ^0.0.2
+  pitchupdart: ^0.0.2
+  permission_handler: ^11.0.1
+  flutter_audio_capture: ^1.1.6
+  syncfusion_flutter_gauges: ^21.2.4
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +89,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/db/
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

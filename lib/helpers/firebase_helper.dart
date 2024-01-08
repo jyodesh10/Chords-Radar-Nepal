@@ -22,7 +22,7 @@ class FirebaseHelper {
 
   Future<void> addToFBdatabase(SongsModel product) async {
     // Check if the product already exists in the cart
-    QuerySnapshot existingProducts = await songs.where('id', isEqualTo: product.id).get();
+    QuerySnapshot existingProducts = await songs.where('docId', isEqualTo: product.docId).get();
 
     if (existingProducts.docs.isNotEmpty) {
       

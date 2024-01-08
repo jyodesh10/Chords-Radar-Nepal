@@ -1,5 +1,6 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
 import 'package:chord_radar_nepal/constants/constants.dart';
+import 'package:chord_radar_nepal/pages/home/home_page.dart';
 import 'package:chord_radar_nepal/widgets/snackbar_widget.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,8 @@ import '../../widgets/shimmer_widget.dart';
 import '../song_chord/songchord_page.dart';
 
 class SavedSongsPage extends StatefulWidget {
-  const SavedSongsPage({super.key});
+  const SavedSongsPage({super.key, this.fromSplash = false});
+  final bool? fromSplash;
 
   @override
   State<SavedSongsPage> createState() => _SavedSongsPageState();
@@ -24,7 +26,11 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
         backgroundColor: AppColors.deepTeal,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            if(widget.fromSplash == true) {
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => true,);
+            } else {
+              Navigator.pop(context);
+            }
           },
           icon: const Icon(
             FluentIcons.arrow_circle_left_48_regular,

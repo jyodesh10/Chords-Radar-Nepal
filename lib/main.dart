@@ -1,11 +1,13 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
+import 'package:chord_radar_nepal/pages/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:chord_radar_nepal/bloc/home_bloc/home_bloc.dart';
+import 'bloc/tuner_bloc/tuner_bloc.dart';
+import 'bloc/tunings_cubit/tunings_cubit.dart';
 import 'helpers/db_helper.dart';
-import 'pages/home/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +30,13 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<FavoritesCubit>(
           create: (context) => FavoritesCubit()..readDb(), 
-        )
+        ),
+        BlocProvider<TunerBloc>(
+          create: (context) => TunerBloc(),
+        ),
+        BlocProvider<TuningsCubit>(
+          create: (context) => TuningsCubit(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -36,7 +44,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const HomePage(),
+        home: const SplashPage(),
       ),
     );
   }
