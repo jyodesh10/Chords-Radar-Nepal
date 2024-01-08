@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
-
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
@@ -20,25 +18,24 @@ class TunerBloc extends Bloc<TunerEvent, TunerState> {
   var note = "";
   var status = "Click on start";
   TunerBloc() : super(TunerInitial()) {
-    on<TunerEvent>((event, emit) {
-    });
+    on<TunerEvent>((event, emit) {});
 
-    on<StartRecordingEvent>((event, emit)async {
-        await _audioRecorder.start(listener, error,
-        sampleRate: 44100, bufferSize: 3000);
+    on<StartRecordingEvent>((event, emit) async {
+      await _audioRecorder.start(listener, error,
+          sampleRate: 44100, bufferSize: 3000);
 
-    note = "";
-    status = "Play something";
-    emit(RecordingState(note: note, status: status) );
+      note = "";
+      status = "Play something";
+      emit(RecordingState(note: note, status: status));
       // _startCapture();
     });
+
     on<StopRecordingEvent>((event, emit) {
-      emit(NotRecordingState());
       _stopCapture();
+      emit(NotRecordingState());
     });
+  
   }
-
-
 
   void listener(dynamic obj) {
     var buffer = Float64List.fromList(obj.cast<double>());

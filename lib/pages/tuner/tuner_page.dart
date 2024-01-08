@@ -22,18 +22,24 @@ class _TunerPageState extends State<TunerPage> {
   List<String> chars = [];
 
 
+
+
   @override
   void initState() {
     super.initState();
     recordPerm();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     BlocProvider.of<TunerBloc>(context).add(const StartRecordingEvent());
   }
+
 
   @override
   void dispose() {
     super.dispose();
-    BlocProvider.of<TunerBloc>(context).add(const StopRecordingEvent());
-    TunerBloc().close();
   }
 
   recordPerm()async{
@@ -46,119 +52,122 @@ class _TunerPageState extends State<TunerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            // color: const Color.fromARGB(255, 5, 155, 155),
-            decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                    colors: <Color>[
-                  Color.fromRGBO(3, 0, 28, 0.6),
-                  Color.fromRGBO(17, 20, 42, 0.723)
-                ],
-                    // begin: Alignment.topCenter,
-                    // end: Alignment.bottomCenter,
-                    stops: <double>[
-                  0.25,
-                  0.75
-                ])),
-            child: BlocBuilder<TunerBloc, TunerState>(
-              builder: (context, state) {
-                return Center(
-                  child: Column(children: [
-                    const Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const IconButton(
-                          onPressed: null,
-                          icon: Icon(Icons.menu, size: 30, color: Colors.transparent),
-                        ),
-                        const Spacer(),
-                        Center(
-                          child: context.read<TunerBloc>().status ==
-                                  "TuningStatus.undefined"
-                              ? const SizedBox(
-                                  height: 80,
-                                  width: 80,
-                                )
-                              : Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: context.read<TunerBloc>().status ==
-                                              "TuningStatus.tuned"
-                                          ? Colors.green.shade200
-                                          : Colors.red.shade200,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 10,
-                                            spreadRadius: 20,
-                                            color:
-                                                context.read<TunerBloc>().status ==
-                                                        "TuningStatus.tuned"
-                                                    ? Colors.green.shade200
-                                                    : Colors.red.shade200)
-                                      ]),
-                                  child: Center(
-                                    child: Text(
-                                      context.watch<TunerBloc>().note,
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          // context.read<TunerBloc>().status =="TuningStatus.tuned"?Colors.green: Colors.red,
-                                          fontSize: 60.0,
-                                          fontWeight: FontWeight.bold),
+    return WillPopScope(
+      onWillPop: () async {
+        BlocProvider.of<TunerBloc>(context).add(const StopRecordingEvent());
+        return true;
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              // color: const Color.fromARGB(255, 5, 155, 155),
+              decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                      colors: <Color>[
+                    Color.fromRGBO(3, 0, 28, 0.6),
+                    Color.fromRGBO(17, 20, 42, 0.723)
+                  ],
+                      // begin: Alignment.topCenter,
+                      // end: Alignment.bottomCenter,
+                      stops: <double>[
+                    0.25,
+                    0.75
+                  ])),
+              child: BlocBuilder<TunerBloc, TunerState>(
+                builder: (context, state) {
+                  return Center(
+                    child: Column(children: [
+                      const Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const IconButton(
+                            onPressed: null,
+                            icon: Icon(Icons.menu, size: 30, color: Colors.transparent),
+                          ),
+                          const Spacer(),
+                          Center(
+                            child: context.read<TunerBloc>().status ==
+                                    "TuningStatus.undefined"
+                                ? const SizedBox(
+                                    height: 80,
+                                    width: 80,
+                                  )
+                                : Container(
+                                    height: 80,
+                                    width: 80,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(100),
+                                        color: context.read<TunerBloc>().status ==
+                                                "TuningStatus.tuned"
+                                            ? Colors.green.shade200
+                                            : Colors.red.shade200,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 10,
+                                              spreadRadius: 20,
+                                              color:
+                                                  context.read<TunerBloc>().status ==
+                                                          "TuningStatus.tuned"
+                                                      ? Colors.green.shade200
+                                                      : Colors.red.shade200)
+                                        ]),
+                                    child: Center(
+                                      child: Text(
+                                        context.watch<TunerBloc>().note,
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            // context.read<TunerBloc>().status =="TuningStatus.tuned"?Colors.green: Colors.red,
+                                            fontSize: 60.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ),
-                                ),
-                        ),
-                        const Spacer(),
-                        // IconButton(
-                        //   onPressed: () {
-                        //     BlocProvider.of<TunerBloc>(context).add(const StopRecordingEvent());
-                        //     TunerBloc().close();
-                        //     Navigator.push(context, MaterialPageRoute(builder: (context) => const MetronomePage(), ) );
-                        //   },
-                        //   icon: Image.asset("assets/metronome.png",color: Colors.white, )
-                        // ),
-                      ],
-                    ),
-                    const Spacer(),
-                    _buildRadialGauge(),
-                    const Spacer(),
-                    const Center(
-                        child: Text(
-                      "",
-                      // context.read<TunerBloc>().status,
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 60.0,
-                          fontWeight: FontWeight.bold),
-                    )),
-                    _buildTuningOption(),
-                    const Spacer(),
-                  ]),
-                );
-              },
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () {
+                            },
+                            icon: const Icon(Icons.abc_outlined)
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      _buildRadialGauge(),
+                      const Spacer(),
+                      const Center(
+                          child: Text(
+                        "",
+                        // context.read<TunerBloc>().status,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 60.0,
+                            fontWeight: FontWeight.bold),
+                      )),
+                      _buildTuningOption(),
+                      const Spacer(),
+                    ]),
+                  );
+                },
+              ),
             ),
-          ),
-          // Positioned(
-          //   bottom: 700,
-          //   left: 340,
-          //   right: 100,
-          //   top: 10,
-          //   child: IconButton(
-          //     onPressed: () {
-          //       log('message');
-
-          //     },
-          //     icon: const Icon(Icons.menu, size: 30, color: Colors.white),
-          //   ),
-          // )
-        ],
+            // Positioned(
+            //   bottom: 700,
+            //   left: 340,
+            //   right: 100,
+            //   top: 10,
+            //   child: IconButton(
+            //     onPressed: () {
+            //       log('message');
+    
+            //     },
+            //     icon: const Icon(Icons.menu, size: 30, color: Colors.white),
+            //   ),
+            // )
+          ],
+        ),
       ),
     );
   }
