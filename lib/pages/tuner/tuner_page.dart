@@ -1,3 +1,5 @@
+import 'package:chord_radar_nepal/constants/constants.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:syncfusion_flutter_gauges/gauges.dart";
@@ -43,10 +45,13 @@ class _TunerPageState extends State<TunerPage> {
   }
 
   recordPerm()async{
-    if (await Permission.microphone.request().isGranted) {
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(
-      //   "Permission Granted"
-      // )));
+    final result = await Permission.microphone.request();
+    if (result.isGranted) {
+      if(mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(
+          "Permission Granted"
+        )));
+      }
     }
   }
 
@@ -58,115 +63,94 @@ class _TunerPageState extends State<TunerPage> {
         return true;
       },
       child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              // color: const Color.fromARGB(255, 5, 155, 155),
-              decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                      colors: <Color>[
-                    Color.fromRGBO(3, 0, 28, 0.6),
-                    Color.fromRGBO(17, 20, 42, 0.723)
-                  ],
-                      // begin: Alignment.topCenter,
-                      // end: Alignment.bottomCenter,
-                      stops: <double>[
-                    0.25,
-                    0.75
-                  ])),
-              child: BlocBuilder<TunerBloc, TunerState>(
-                builder: (context, state) {
-                  return Center(
-                    child: Column(children: [
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const IconButton(
-                            onPressed: null,
-                            icon: Icon(Icons.menu, size: 30, color: Colors.transparent),
-                          ),
-                          const Spacer(),
-                          Center(
-                            child: context.read<TunerBloc>().status ==
-                                    "TuningStatus.undefined"
-                                ? const SizedBox(
-                                    height: 80,
-                                    width: 80,
-                                  )
-                                : Container(
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(100),
-                                        color: context.read<TunerBloc>().status ==
-                                                "TuningStatus.tuned"
-                                            ? Colors.green.shade200
-                                            : Colors.red.shade200,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 10,
-                                              spreadRadius: 20,
-                                              color:
-                                                  context.read<TunerBloc>().status ==
-                                                          "TuningStatus.tuned"
-                                                      ? Colors.green.shade200
-                                                      : Colors.red.shade200)
-                                        ]),
-                                    child: Center(
-                                      child: Text(
-                                        context.watch<TunerBloc>().note,
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            // context.read<TunerBloc>().status =="TuningStatus.tuned"?Colors.green: Colors.red,
-                                            fontSize: 60.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () {
-                            },
-                            icon: const Icon(Icons.abc_outlined)
-                          ),
-                        ],
+        backgroundColor: AppColors.charcoal,
+        body: Container(
+          color: AppColors.charcoal,
+          child: BlocBuilder<TunerBloc, TunerState>(
+            builder: (context, state) {
+              return Center(
+                child: Column(children: [
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          BlocProvider.of<TunerBloc>(context).add(const StopRecordingEvent());
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          FluentIcons.arrow_circle_left_48_regular,
+                          size: 40,
+                          color: AppColors.deepTeal,
+                        ),
                       ),
                       const Spacer(),
-                      _buildRadialGauge(),
+                      Center(
+                        child: context.read<TunerBloc>().status ==
+                                "TuningStatus.undefined"
+                            ? const SizedBox(
+                                height: 80,
+                                width: 80,
+                              )
+                            : Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: context.read<TunerBloc>().status ==
+                                            "TuningStatus.tuned"
+                                        ? Colors.green.shade200
+                                        : Colors.red.shade200,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          spreadRadius: 20,
+                                          color:
+                                              context.read<TunerBloc>().status ==
+                                                      "TuningStatus.tuned"
+                                                  ? Colors.green.shade200
+                                                  : Colors.red.shade200)
+                                    ]),
+                                child: Center(
+                                  child: Text(
+                                    context.watch<TunerBloc>().note,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        // context.read<TunerBloc>().status =="TuningStatus.tuned"?Colors.green: Colors.red,
+                                        fontSize: 60.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                      ),
                       const Spacer(),
-                      const Center(
-                          child: Text(
-                        "",
-                        // context.read<TunerBloc>().status,
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 60.0,
-                            fontWeight: FontWeight.bold),
-                      )),
-                      _buildTuningOption(),
-                      const Spacer(),
-                    ]),
-                  );
-                },
-              ),
-            ),
-            // Positioned(
-            //   bottom: 700,
-            //   left: 340,
-            //   right: 100,
-            //   top: 10,
-            //   child: IconButton(
-            //     onPressed: () {
-            //       log('message');
-    
-            //     },
-            //     icon: const Icon(Icons.menu, size: 30, color: Colors.white),
-            //   ),
-            // )
-          ],
+                      IconButton(
+                        onPressed: () {
+                        },
+                        icon: const Icon(Icons.abc_outlined)
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  _buildRadialGauge(),
+                  const Spacer(),
+                  const Center(
+                      child: Text(
+                    "",
+                    // context.read<TunerBloc>().status,
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 60.0,
+                        fontWeight: FontWeight.bold),
+                  )),
+                  _buildTuningOption(),
+                  const Spacer(),
+                ]),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -190,7 +174,7 @@ class _TunerPageState extends State<TunerPage> {
                     // color: const Color(0xFFFE2A25),
                     label: 'Low',
                     gradient: const SweepGradient(colors: <Color>[
-                      Color(0xFFACB6E5)
+                      AppColors.burntOrange
                     ], stops: <double>[
                       0.25
                     ]),
@@ -206,8 +190,8 @@ class _TunerPageState extends State<TunerPage> {
                     // color:const Color(0xFFFFBA00),
                     label: 'Tuned',
                     gradient: const SweepGradient(colors: <Color>[
-                       Color(0xFFACB6E5),
-                      Color(0xFF74ebd5)
+                      AppColors.burntOrange,
+                      AppColors.neonBlue
                     ], stops: <double>[
                       0.25,
                       0.75
@@ -224,7 +208,7 @@ class _TunerPageState extends State<TunerPage> {
                     // color:const Color(0xFF00AB47),
                     label: 'High',
                     gradient: const SweepGradient(colors: <Color>[
-                      Color(0xFF74ebd5)
+                      AppColors.neonBlue
                     ], stops: <double>[
                       0.75
                     ]),
