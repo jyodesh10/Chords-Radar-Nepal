@@ -146,11 +146,17 @@ class _SongchordPageState extends State<SongchordPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  widget.song.title,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: titleStyle.copyWith(fontSize: 16),
+                                Hero(
+                                  tag: widget.song.docId,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Text(
+                                      widget.song.title,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: titleStyle.copyWith(fontSize: 16),
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 5,

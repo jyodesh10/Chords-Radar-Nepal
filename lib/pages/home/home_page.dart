@@ -4,6 +4,7 @@ import 'package:chord_radar_nepal/pages/saved_songs/saved_songs_page.dart';
 import 'package:chord_radar_nepal/pages/search/search_page.dart';
 import 'package:chord_radar_nepal/pages/song_chord/songchord_page.dart';
 import 'package:chord_radar_nepal/pages/tuner/tuner_page.dart';
+import 'package:chord_radar_nepal/utils/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -25,11 +26,99 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    checkFirstTime();
   }
 
   List<SongsModel> favs = [];
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  final formKey = GlobalKey<FormState>();
+
+
+  TextEditingController namecontroller =TextEditingController();
+
+  checkFirstTime() {
+    if(SharedPref.read("isFirstTime") == null || SharedPref.read("isFirstTime") == true ) {
+      SharedPref.write("isFirstTime", false);
+      Future.delayed(const Duration(seconds: 1), () => 
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              backgroundColor: AppColors.charcoal,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Add Username",
+                    style: titleStyle.copyWith(color: AppColors.neonBlue),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Form(
+                      key: formKey,
+                      child: TextFormField(
+                        controller: namecontroller,
+                        textInputAction: TextInputAction.done,
+                        style: titleStyle,
+                        validator: (value) {
+                           if (value == null || value.isEmpty) {
+                            return "*required";
+                          } 
+                          return null;
+                        },
+                        onFieldSubmitted: (value) {
+                          if(formKey.currentState!.validate()) {
+                            SharedPref.write("username", value.trim().capitalizeWords() ).whenComplete(() {
+                              setState(() {
+                              });
+                              namecontroller.clear();
+                              Navigator.pop(context);
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MaterialButton(
+                    color: AppColors.deepTeal,
+                    child: Text("Submit", style: titleStyle, ),
+                    onPressed: () {
+                      if(formKey.currentState!.validate()) {
+                        SharedPref.write("username", namecontroller.text.trim().capitalizeWords()).whenComplete(() {
+                          setState(() {
+                          });
+                          namecontroller.clear();
+                          Navigator.pop(context);
+                        });
+                      }
+                    }
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +133,29 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: [
             DrawerHeader(
-                decoration: const BoxDecoration(color: AppColors.deepTeal),
-                child: Container()),
-            BlocBuilder<FavoritesCubit,FavoritesState>(
+              decoration: const BoxDecoration(color: AppColors.deepTeal),
+              child: Container(
+                height: 150,
+                width: 150,
+                margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 5 ),
+                decoration: BoxDecoration(
+                  color: AppColors.charcoal,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      blurRadius: 10,
+                      offset: Offset(0, 2),
+                    )
+                  ]
+                ),
+                child: Image.asset("assets/no_bg.png"))
+            ),
+            BlocBuilder<FavoritesCubit, FavoritesState>(
               builder: (context, state) {
-                if(state is FavoritesLoadingState) {
+                if (state is FavoritesLoadingState) {
                   return Container();
-                } 
-                if(state is FavoritesLoadedState) {
+                }
+                if (state is FavoritesLoadedState) {
                   favs.addAll(state.songs);
                   return ListTile(
                     onTap: () => Navigator.push(
@@ -115,13 +219,19 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SongchordPage(
-                                        song: result[index]),
+                                    builder: (context) =>
+                                        SongchordPage(song: result[index]),
                                   ));
                             },
-                            title: Text(
-                              result[index].title.toString(),
-                              style: titleStyle.copyWith(fontSize: 15),
+                            title: Hero(
+                              tag: result[index].docId,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: Text(
+                                  result[index].title.toString(),
+                                  style: titleStyle.copyWith(fontSize: 15),
+                                ),
+                              ),
                             ),
                             subtitle: Text(result[index].artist.toString(),
                                 style: subtitleStyle),
@@ -130,8 +240,7 @@ class _HomePageState extends State<HomePage> {
                             // trailing: IconButton(
                             //   onPressed: () async {
                             //     await FirebaseHelper().deleteSong(result[index].docId).whenComplete(() {
-                            //       // BlocProvider.of<HomeBloc>(context).add(const SongsEvent());
-                            //       log("delete ${result[index].docId}");
+                            //       // BlocProvider.of<HomeBloc>(context).add(const SongsEvent()); 
                             //     });
                             //     // FirebaseHelper().deleteSong(result[index].id.toString());
                             //   } ,
@@ -158,12 +267,15 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: "f1",
-            child: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AddSongsPage(),) );
-            }
-          ),
+              heroTag: "f1",
+              child: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddSongsPage(),
+                    ));
+              }),
           FloatingActionButton(
               heroTag: "f2",
               backgroundColor: AppColors.deepTeal,
@@ -172,7 +284,6 @@ class _HomePageState extends State<HomePage> {
                 color: AppColors.white,
               ),
               onPressed: () {
-                debugPrint(favs.toString());
                 showDialog(
                   context: context,
                   builder: (context) => Dialog(
@@ -259,7 +370,9 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 width: 20,
               ),
-              const TimeGreeting(),
+              TimeGreeting(
+                username: SharedPref.read("username") ?? "User" 
+              ),
               const Spacer(),
               Builder(
                   builder: (context) => IconButton(
@@ -286,13 +399,14 @@ class _HomePageState extends State<HomePage> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,
                 onSubmitted: (value) {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => SearchPage(
-                      query: value,
-                      songsList: songs,
-                    ), 
-                    )
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                          query: value,
+                          songsList: songs,
+                        ),
+                      ));
                 },
                 decoration: InputDecoration(
                     hintText: "Search songs & artist..",
@@ -306,10 +420,10 @@ class _HomePageState extends State<HomePage> {
                       color: AppColors.neonBlue,
                       size: 30,
                     ),
-                    enabledBorder:
-                        OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                    focusedBorder:
-                        OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
               ),
@@ -347,18 +461,16 @@ class _HomePageState extends State<HomePage> {
                             height: 10,
                             width: 250,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)
-                            ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                           Container(
                             margin: const EdgeInsets.only(bottom: 5),
                             height: 10,
                             width: 150,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)
-                            ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                         ],
                       ),

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 
 class TimeGreeting extends StatefulWidget {
-  const TimeGreeting({super.key});
+  const TimeGreeting({super.key, required this.username});
+  final String username;
 
   @override
   State<TimeGreeting> createState() => _TimeGreetingState();
@@ -36,7 +37,7 @@ class _TimeGreetingState extends State<TimeGreeting> {
     }
 
     return Text(
-      "$greeting,\nUser",
+      "$greeting,\n${widget.username}",
       style: titleStyle,
     );
   }

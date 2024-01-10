@@ -44,13 +44,15 @@ class _TunerPageState extends State<TunerPage> {
     super.dispose();
   }
 
-  recordPerm()async{
+  Future recordPerm()async{
     final result = await Permission.microphone.request();
     if (result.isGranted) {
+    } else {
       if(mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(
-          "Permission Granted"
+          "Permission Denied"
         )));
+        Navigator.pop(context);
       }
     }
   }

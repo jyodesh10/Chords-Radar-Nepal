@@ -44,18 +44,28 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: Container(
         color: AppColors.charcoal,
-        // child: Center(child: Image.asset("assets/logo.png")),
-        child: Center(
-          child: AnimatedTextKit(
-            animatedTexts: [
-              TypewriterAnimatedText(
-                "Chords\nRadar", 
-                textStyle: titleStyle.copyWith(fontSize: 80 ),
-                speed: const Duration(
-                  milliseconds: 110
-                )
-              )
-            ])
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Image.asset("assets/no_bg.png", height: 130, width: 130, )),
+            Expanded(
+              flex: 5,
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    "Chords\nRadar", 
+                    textStyle: titleStyle.copyWith(fontSize: 50),
+                    speed: const Duration(
+                      milliseconds: 110
+                    )
+                  )
+                ]),
+            ),
+          ],
         ),
       ),
     );

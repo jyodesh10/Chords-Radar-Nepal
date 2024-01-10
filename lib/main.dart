@@ -8,6 +8,7 @@ import 'package:chord_radar_nepal/bloc/home_bloc/home_bloc.dart';
 import 'bloc/tuner_bloc/tuner_bloc.dart';
 import 'bloc/tunings_cubit/tunings_cubit.dart';
 import 'helpers/db_helper.dart';
+import 'utils/shared_pref.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,7 @@ void main() async {
   // await DBhelper().copyDatabaseToDevice();
   // await DBhelper().initialize();
   await DatabaseConnection().setDatabase();
+  await SharedPref.init();
   runApp(const MyApp());
 }
 
