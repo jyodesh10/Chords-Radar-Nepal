@@ -1,16 +1,13 @@
-# chord_radar_nepal
 
-A new Flutter project.
+# Chords Radar - Nepali Guitar Chords Application
 
-## Getting Started
+Chords Radar is a user-friendly Nepali guitar chords application that aims to simplify the process of learning and playing your favorite Nepali songs on the guitar. Whether you're a beginner or an experienced guitarist, Chords Radar provides a comprehensive set of features to enhance your musical journey.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features that Rock:
+1. View Lyrics with Chords
+2. Auto-Scroll
+3. Offline Save
+4. Guitar Tuner
+5. Easy-to-Use UI
+6. Search Feature
+7. Sort by Artist and Title
