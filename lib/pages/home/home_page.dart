@@ -266,16 +266,16 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-              heroTag: "f1",
-              child: const Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddSongsPage(),
-                    ));
-              }),
+          // FloatingActionButton(
+          //     heroTag: "f1",
+          //     child: const Icon(Icons.add),
+          //     onPressed: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => const AddSongsPage(),
+          //           ));
+          //     }),
           FloatingActionButton(
               heroTag: "f2",
               backgroundColor: AppColors.deepTeal,
