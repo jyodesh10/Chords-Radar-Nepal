@@ -6,6 +6,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../model/songs_model.dart';
 import '../../widgets/shimmer_widget.dart';
 import '../song_chord/songchord_page.dart';
 
@@ -55,11 +56,12 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
             return const ShimmerWidget();
           }
           if(state is FavoritesLoadedState) {
+            List<SongsModel> songs = state.songs.reversed.toList();
             return SafeArea(
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.songs.length,
+                itemCount: songs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     tileColor: AppColors.charcoal,
@@ -68,22 +70,22 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SongchordPage(
-                                song: state.songs[index]
+                                song: songs[index]
                                 ),
                           ));
                     },
                     title: Text(
-                      state.songs[index].title.toString(),
+                      songs[index].title.toString(),
                       style: titleStyle.copyWith(fontSize: 15),
                     ),
-                    subtitle: Text(state.songs[index].artist.toString(),
+                    subtitle: Text(songs[index].artist.toString(),
                         style: subtitleStyle),
 
                     //delete
                     trailing: IconButton(
                         onPressed: () {
                           BlocProvider.of<FavoritesCubit>(context)
-                              .deleteDb(state.songs[index]);
+                              .deleteDb(songs[index]);
                         },
                         icon: const Icon(Icons.delete)),
                   );

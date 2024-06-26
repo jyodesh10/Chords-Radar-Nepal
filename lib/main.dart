@@ -1,10 +1,10 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
+import 'package:chord_radar_nepal/bloc/home_bloc/home_bloc.dart';
 import 'package:chord_radar_nepal/pages/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:chord_radar_nepal/bloc/home_bloc/home_bloc.dart';
 import 'bloc/tuner_bloc/tuner_bloc.dart';
 import 'bloc/tunings_cubit/tunings_cubit.dart';
 import 'helpers/db_helper.dart';
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Chords Radar',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

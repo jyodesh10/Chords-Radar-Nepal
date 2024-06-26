@@ -1,5 +1,8 @@
 import 'dart:developer';
+
+import 'package:chord_radar_nepal/widgets/snackbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import '../model/songs_model.dart';
 
@@ -7,6 +10,7 @@ import '../model/songs_model.dart';
 class FirebaseHelper {
   final _firestore = FirebaseFirestore.instance;
   CollectionReference songs = FirebaseFirestore.instance.collection('songs');
+  CollectionReference requests = FirebaseFirestore.instance.collection('requests');
 
   Future<List<SongsModel>> getSongs(String orderBy) async {
     QuerySnapshot<Map<String, dynamic>> data =
@@ -45,5 +49,16 @@ class FirebaseHelper {
         log("Added new product to wishlist: ${product.title}")
       );
     }
+  }
+
+
+  Future<void> addRequest(BuildContext context, String artist, String song) async {
+    await requests.add({
+      "artist" : artist,
+      "song" : song,
+    }).whenComplete(() {
+      Navigator.pop(context);
+      showSnackbar(context, "request sent");
+    });
   }
 }

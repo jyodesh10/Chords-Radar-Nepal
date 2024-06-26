@@ -17,6 +17,7 @@ mixin AppColors {
   static const Color deepTeal = Color(0xFF008080);
   static const Color vibrantPurple = Color(0xFF5D00FF);
   static const Color white = Colors.white;
+  static Color white7 = AppColors.white.withOpacity(0.7);
 }
 
 TextStyle titleStyle = GoogleFonts.poppins(

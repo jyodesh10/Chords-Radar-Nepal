@@ -1,16 +1,19 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
 import 'package:chord_radar_nepal/constants/constants.dart';
+import 'package:chord_radar_nepal/helpers/firebase_helper.dart';
 import 'package:chord_radar_nepal/pages/saved_songs/saved_songs_page.dart';
 import 'package:chord_radar_nepal/pages/search/search_page.dart';
 import 'package:chord_radar_nepal/pages/song_chord/songchord_page.dart';
 import 'package:chord_radar_nepal/pages/tuner/tuner_page.dart';
 import 'package:chord_radar_nepal/utils/shared_pref.dart';
+import 'package:chord_radar_nepal/widgets/dialogs.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../bloc/home_bloc/home_bloc.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
+import '../../bloc/home_bloc/home_bloc.dart';
 import '../../model/songs_model.dart';
 import '../../widgets/time_greetings.dart';
 import 'add_songs_page.dart';
@@ -26,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getPermissions();
     checkFirstTime();
   }
 
@@ -36,6 +40,8 @@ class _HomePageState extends State<HomePage> {
 
 
   TextEditingController namecontroller =TextEditingController();
+  TextEditingController artistcontroller =TextEditingController();
+  TextEditingController songcontroller =TextEditingController();
 
   checkFirstTime() {
     if(SharedPref.read("isFirstTime") == null || SharedPref.read("isFirstTime") == true ) {
@@ -120,6 +126,25 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  getPermissions() async {
+    var status = await Permission.microphone.request();
+    if(status.isDenied) {
+      if(mounted) {
+        buildDialog(
+          context,  
+          const Column(
+            mainAxisSize: MainAxisSize.min,
+            children:  [
+              ListTile(
+                title: Text("Premission required for guitar tuner"),
+              )
+            ]
+          )  
+        );
+      } 
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +155,7 @@ class _HomePageState extends State<HomePage> {
       // ),
       drawer: Drawer(
         backgroundColor: AppColors.charcoal,
-        child: ListView(
+        child: Column(
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(color: AppColors.deepTeal),
@@ -148,7 +173,8 @@ class _HomePageState extends State<HomePage> {
                     )
                   ]
                 ),
-                child: Image.asset("assets/no_bg.png"))
+                // child: Image.asset("assets/no_bg.png")
+              )
             ),
             BlocBuilder<FavoritesCubit, FavoritesState>(
               builder: (context, state) {
@@ -169,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     title: Text(
                       "Saved",
-                      style: titleStyle,
+                      style: titleStyle.copyWith(fontSize: 18),
                     ),
                   );
                 }
@@ -188,8 +214,99 @@ class _HomePageState extends State<HomePage> {
               ),
               title: Text(
                 "Tuner",
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize: 18),
               ),
+            ),
+            ListTile(
+              onTap: () {},
+              leading: const Icon(
+                FluentIcons.share_24_regular,
+                color: AppColors.white,
+              ),
+              title: Text(
+                "Share",
+                style: titleStyle.copyWith(fontSize: 18)
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                buildDialog(
+                  context,
+                  backgroundClr: AppColors.charcoal,
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Artist",
+                          style: subtitleStyle.copyWith(color: AppColors.neonBlue),
+                        ),
+                        TextFormField(
+                          controller: artistcontroller,
+                          textInputAction: TextInputAction.done,
+                          style: subtitleStyle.copyWith(color: AppColors.white),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "*required";
+                            } 
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Song",
+                          style: subtitleStyle.copyWith(color: AppColors.neonBlue),
+                        ),
+                        TextFormField(
+                          controller: songcontroller,
+                          textInputAction: TextInputAction.done,
+                          style: subtitleStyle.copyWith(color: AppColors.white),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "*required";
+                            } 
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        MaterialButton(
+                          color: AppColors.deepTeal,
+                          child: Text("Submit", style: titleStyle, ),
+                          onPressed: () {
+                            FirebaseHelper().addRequest(context, artistcontroller.text, songcontroller.text);
+                          }
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  )
+                );
+              },
+              leading: const Icon(
+                FluentIcons.more_circle_24_regular,
+                color: AppColors.white,
+              ),
+              title: Text(
+                "Request For Song Chords",
+                style: titleStyle.copyWith(fontSize: 18)
+              ),
+            ),
+            const Spacer(),
+            Text("App Version: 1.0.0", style: subtitleStyle.copyWith(fontSize: 12),),
+            const SizedBox(
+              height: 10,
             )
           ],
         ),
@@ -311,7 +428,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pop(context);
                           },
                           leading: const Icon(
-                            FluentIcons.filter_20_regular,
+                            FluentIcons.person_24_regular,
                             color: AppColors.white,
                           ),
                           title: Text("Artist",
@@ -325,7 +442,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pop(context);
                           },
                           leading: const Icon(
-                            FluentIcons.filter_20_regular,
+                            FluentIcons.list_24_regular,
                             color: AppColors.white,
                           ),
                           title: Text(
@@ -363,8 +480,9 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     scaffoldKey.currentState!.openDrawer();
                   },
-                  icon: const Icon(
-                    Icons.menu,
+                  icon: Icon(
+                    FluentIcons.options_24_filled,
+                    color: AppColors.white7,
                     size: 30,
                   )),
               const SizedBox(
@@ -374,14 +492,14 @@ class _HomePageState extends State<HomePage> {
                 username: SharedPref.read("username") ?? "User" 
               ),
               const Spacer(),
-              Builder(
-                  builder: (context) => IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        FluentIcons.settings_48_filled,
-                        size: 35,
-                        color: AppColors.gunmetal,
-                      )))
+              // Builder(
+              //     builder: (context) => IconButton(
+              //         onPressed: () {},
+              //         icon: const Icon(
+              //           FluentIcons.settings_48_filled,
+              //           size: 35,
+              //           color: AppColors.gunmetal,
+              //         )))
             ],
           ),
           const SizedBox(

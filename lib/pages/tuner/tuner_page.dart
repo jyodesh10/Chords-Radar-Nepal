@@ -2,8 +2,9 @@ import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import "package:syncfusion_flutter_gauges/gauges.dart";
 import 'package:permission_handler/permission_handler.dart';
+import "package:syncfusion_flutter_gauges/gauges.dart";
+
 import '../../bloc/tuner_bloc/tuner_bloc.dart';
 import '../../bloc/tunings_cubit/tunings_cubit.dart';
 import '../../widgets/dialogs.dart';
@@ -93,39 +94,17 @@ class _TunerPageState extends State<TunerPage> {
                         child: context.read<TunerBloc>().status ==
                                 "TuningStatus.undefined"
                             ? const SizedBox(
-                                height: 80,
-                                width: 80,
+                              height: 100,
                               )
-                            : Container(
-                                height: 80,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: context.read<TunerBloc>().status ==
-                                            "TuningStatus.tuned"
-                                        ? Colors.green.shade200
-                                        : Colors.red.shade200,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          spreadRadius: 20,
-                                          color:
-                                              context.read<TunerBloc>().status ==
-                                                      "TuningStatus.tuned"
-                                                  ? Colors.green.shade200
-                                                  : Colors.red.shade200)
-                                    ]),
-                                child: Center(
-                                  child: Text(
-                                    context.watch<TunerBloc>().note,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        // context.read<TunerBloc>().status =="TuningStatus.tuned"?Colors.green: Colors.red,
-                                        fontSize: 60.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                            : Center(
+                              child: Text(
+                                context.watch<TunerBloc>().note,
+                                style: TextStyle(
+                                    color: context.read<TunerBloc>().status =="TuningStatus.tuned"?AppColors.olive: AppColors.burntOrange,
+                                    fontSize: 60.0,
+                                    fontWeight: FontWeight.bold),
                               ),
+                            ),
                       ),
                       const Spacer(),
                       IconButton(
@@ -169,14 +148,13 @@ class _TunerPageState extends State<TunerPage> {
                 showTicks: false,
                 minimum: 0,
                 maximum: 99,
-                
                 ranges: <GaugeRange>[
                   GaugeRange(
                     startValue: 0, endValue: 33,
                     // color: const Color(0xFFFE2A25),
                     label: 'Low',
                     gradient: const SweepGradient(colors: <Color>[
-                      AppColors.burntOrange
+                      AppColors.deepTeal
                     ], stops: <double>[
                       0.25
                     ]),
@@ -192,8 +170,8 @@ class _TunerPageState extends State<TunerPage> {
                     // color:const Color(0xFFFFBA00),
                     label: 'Tuned',
                     gradient: const SweepGradient(colors: <Color>[
-                      AppColors.burntOrange,
-                      AppColors.neonBlue
+                      AppColors.deepTeal,
+                      AppColors.olive
                     ], stops: <double>[
                       0.25,
                       0.75
@@ -210,7 +188,7 @@ class _TunerPageState extends State<TunerPage> {
                     // color:const Color(0xFF00AB47),
                     label: 'High',
                     gradient: const SweepGradient(colors: <Color>[
-                      AppColors.neonBlue
+                      AppColors.olive
                     ], stops: <double>[
                       0.75
                     ]),
@@ -243,6 +221,8 @@ class _TunerPageState extends State<TunerPage> {
                       needleStartWidth: 1,
                       needleEndWidth: 5,
                       needleColor: Colors.white,
+                      animationDuration: 500,
+                      enableAnimation: true,
                       knobStyle: const KnobStyle(
                           knobRadius: 0.09,
                           borderColor: Colors.white,

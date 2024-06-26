@@ -49,9 +49,9 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 4,
-              child: Image.asset("assets/no_bg.png", height: 130, width: 130, )),
+            // Expanded(
+            //   flex: 4,
+            //   child: Image.asset("assets/no_bg.png", height: 130, width: 130, )),
             Expanded(
               flex: 5,
               child: AnimatedTextKit(
@@ -62,7 +62,15 @@ class _SplashPageState extends State<SplashPage> {
                     speed: const Duration(
                       milliseconds: 110
                     )
-                  )
+                  ),
+                  TypewriterAnimatedText(
+                    "Nepali Song Chords", 
+                    textStyle: titleStyle.copyWith(fontSize: 20),
+                    speed: const Duration(
+                      milliseconds: 110
+                    )
+                  ),
+
                 ]),
             ),
           ],
