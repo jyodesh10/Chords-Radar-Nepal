@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../constants/constants.dart';
+import '../chart/chord_chart_view.dart';
 
 class SongchordPage extends StatefulWidget {
   const SongchordPage(
@@ -157,11 +158,19 @@ class _SongchordPageState extends State<SongchordPage> {
                                         )
                                       );
                                       break;
+                                      case 'Chords chart':
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const ChordChartView(),
+                                        )
+                                      );
+                                      break;
                                       default:
                                     }
                                   },
                                   itemBuilder: (context) {
-                                    return {'chords chart', 'Tuner'}.map((String choice) {
+                                    return {'Chords chart', 'Tuner'}.map((String choice) {
                                       return PopupMenuItem<String>(
                                         value: choice,
                                         child: Text(choice, style: subtitleStyle.copyWith(color: AppColors.white)),

@@ -11,6 +11,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../bloc/home_bloc/home_bloc.dart';
@@ -163,17 +164,17 @@ class _HomePageState extends State<HomePage> {
                 height: 150,
                 width: 150,
                 margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 5 ),
-                decoration: BoxDecoration(
-                  color: AppColors.charcoal,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      blurRadius: 10,
-                      offset: Offset(0, 2),
-                    )
-                  ]
-                ),
-                // child: Image.asset("assets/no_bg.png")
+                // decoration: BoxDecoration(
+                //   color: AppColors.charcoal,
+                //   borderRadius: BorderRadius.circular(20),
+                //   boxShadow: const [
+                //     BoxShadow(
+                //       blurRadius: 10,
+                //       offset: Offset(0, 2),
+                //     )
+                //   ]
+                // ),
+                child: Image.asset("assets/logo.png")
               )
             ),
             BlocBuilder<FavoritesCubit, FavoritesState>(
@@ -218,7 +219,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Share.share('Check out Chords Radar Nepal: https://play.google.com/store/apps/details?id=com.zyodes.chord_radar_nepal', subject: 'Nepali Music Chords Application');
+              },
               leading: const Icon(
                 FluentIcons.share_24_regular,
                 color: AppColors.white,
