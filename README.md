@@ -25,7 +25,7 @@ Chords Radar is a user-friendly Nepali guitar chords application that aims to si
 ## Download
 <a href='https://github.com/jyodesh10/Chords-Radar-Nepal/releases/download/latest/Chord-Radar-1.0.0.apk'>Click To Download<a/>
 
-##Become a Tester for Chords Radar
+## Become a Tester for Chords Radar
 Step 1: join group https://groups.google.com/g/chords-radar-testing
 Step 2: Join through Android: https://play.google.com/store/apps/details?id=com.zyodes.chord_radar_nepal
 Step 3: Join through Web: https://play.google.com/apps/testing/com.zyodes.chord_radar_nepal
