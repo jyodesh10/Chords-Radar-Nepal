@@ -1,1 +1,7 @@
 Logo design reference gemini
+
+chords view
+--- when auto scroll ends automatically cancell autoscroll
+
+home view
+--  implement scroll with alphabets with scroll bar when sorting with tile

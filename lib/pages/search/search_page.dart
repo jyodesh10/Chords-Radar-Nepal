@@ -3,7 +3,9 @@ import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/model/songs_model.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../song_chord/songchord_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -19,11 +21,13 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List<SongsModel> searchResult = [];
   final searchCon = TextEditingController();
+  late bool isLightmode;
 
   @override
   void initState() {
     super.initState();
     searchProduct(widget.query);
+    isLightmode = BlocProvider.of<ThemeCubit>(context).state;
     searchCon.text = widget.query;
     
   }
@@ -71,7 +75,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.charcoal,
+      backgroundColor: isLightmode? AppColors.white : AppColors.charcoal,
       appBar: AppBar(
         backgroundColor: AppColors.deepTeal,
         leading: IconButton(
@@ -139,7 +143,7 @@ class _SearchPageState extends State<SearchPage> {
           itemCount: searchResult.length,
           itemBuilder: (context, index) {
             return ListTile(
-              tileColor: AppColors.charcoal,
+              tileColor: isLightmode? AppColors.white : AppColors.charcoal,
               onTap: () {
                 Navigator.push(
                     context,
@@ -151,7 +155,7 @@ class _SearchPageState extends State<SearchPage> {
               },
               title: Text(
                 searchResult[index].title.toString(),
-                style: titleStyle.copyWith(fontSize: 15),
+                style: titleStyle.copyWith(fontSize: 15, color: isLightmode? AppColors. gunmetal.withOpacity(0.8) : AppColors.white),
               ),
               subtitle: Text(searchResult[index].artist.toString(),
                   style: subtitleStyle),

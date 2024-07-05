@@ -6,6 +6,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../../model/songs_model.dart';
 import '../../widgets/shimmer_widget.dart';
 import '../song_chord/songchord_page.dart';
@@ -19,10 +20,18 @@ class SavedSongsPage extends StatefulWidget {
 }
 
 class _SavedSongsPageState extends State<SavedSongsPage> {
+  late bool isLightmode;
+
+  @override
+  void initState() {
+    super.initState();
+    isLightmode = BlocProvider.of<ThemeCubit>(context).state;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.charcoal,
+      backgroundColor: isLightmode? AppColors.white : AppColors.charcoal,
       appBar: AppBar(
         backgroundColor: AppColors.deepTeal,
         leading: IconButton(
@@ -33,10 +42,10 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
               Navigator.pop(context);
             }
           },
-          icon: const Icon(
+          icon: Icon(
             FluentIcons.arrow_circle_left_48_regular,
             size: 40,
-            color: AppColors.charcoal,
+            color: AppColors.white7,
           ),
         ),
         title: Text(
@@ -64,7 +73,7 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
                 itemCount: songs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    tileColor: AppColors.charcoal,
+                    tileColor: isLightmode? AppColors.white : AppColors.charcoal,
                     onTap: () {
                       Navigator.push(
                           context,
@@ -76,8 +85,9 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
                     },
                     title: Text(
                       songs[index].title.toString(),
-                      style: titleStyle.copyWith(fontSize: 15),
-                    ),
+                      style: titleStyle.copyWith(
+                        color:  isLightmode? AppColors.gunmetal.withOpacity(0.8) : AppColors.white.withOpacity(0.8),
+                        fontSize: 15),                    ),
                     subtitle: Text(songs[index].artist.toString(),
                         style: subtitleStyle),
 
@@ -87,7 +97,7 @@ class _SavedSongsPageState extends State<SavedSongsPage> {
                           BlocProvider.of<FavoritesCubit>(context)
                               .deleteDb(songs[index]);
                         },
-                        icon: const Icon(Icons.delete)),
+                        icon: const Icon(Icons.delete, color: AppColors.burntOrange,)),
                   );
                 },
               ),

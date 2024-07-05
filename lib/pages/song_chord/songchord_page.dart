@@ -7,6 +7,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../../constants/constants.dart';
 import '../chart/chord_chart_view.dart';
 
@@ -25,14 +26,21 @@ class _SongchordPageState extends State<SongchordPage> {
   int scrollTime = 6;
   double sliderval = 0.1;
   double fontsize = 15;
+  late bool isLightmode;
 
   @override
   void initState() {
     super.initState();
+    isLightmode = BlocProvider.of<ThemeCubit>(context).state;
     controller = ScrollController()
       ..addListener(() {
         // debugPrint(controller.offset.toString());
         if (autoScroll) {
+          if(controller.position.maxScrollExtent == controller.offset) {
+            setState(() {
+              autoScroll = false;
+            });
+          }
           // controller.animateTo(controller.position.maxScrollExtent, duration: Duration(seconds: (controller.position.maxScrollExtent.round().toInt()/scrollTime).round()), curve: Curves.ease);
         }
       });
@@ -72,10 +80,10 @@ class _SongchordPageState extends State<SongchordPage> {
                         padding: const EdgeInsets.all(10.0)
                             .copyWith(top: 200, bottom: 100),
                         width: double.infinity,
-                        color: AppColors.charcoal,
+                        color:  isLightmode ? AppColors.white : AppColors.charcoal,
                         child: Text(
                           widget.song.content.toString(),
-                          style: subtitleStyle.copyWith(color: AppColors.white, fontSize: fontsize),
+                          style: subtitleStyle.copyWith(color:isLightmode? AppColors.black : AppColors.white.withOpacity(0.8), fontSize: fontsize),
                         ),
                       ),
                       //top

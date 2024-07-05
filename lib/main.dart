@@ -1,10 +1,14 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
 import 'package:chord_radar_nepal/bloc/home_bloc/home_bloc.dart';
+import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/pages/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/scroll_top_cubit/scrolltop_cubit.dart';
+import 'bloc/theme_cubit/theme_cubit.dart';
 import 'bloc/tuner_bloc/tuner_bloc.dart';
 import 'bloc/tunings_cubit/tunings_cubit.dart';
 import 'helpers/db_helper.dart';
@@ -17,6 +21,10 @@ void main() async {
   // await DBhelper().initialize();
   await DatabaseConnection().setDatabase();
   await SharedPref.init();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent, // navigation bar color
+      statusBarColor: AppColors.deepTeal, // status bar color
+    ));
   runApp(const MyApp());
 }
 
@@ -38,6 +46,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<TuningsCubit>(
           create: (context) => TuningsCubit(),
+        ),
+        BlocProvider<ScrolltopCubit>(
+          create: (context) => ScrolltopCubit(),
+        ),
+        BlocProvider<ThemeCubit>(
+          create: (context) => ThemeCubit(),
         ),
       ],
       child: MaterialApp(

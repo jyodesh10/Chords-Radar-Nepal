@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import "package:syncfusion_flutter_gauges/gauges.dart";
 
+import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../../bloc/tuner_bloc/tuner_bloc.dart';
 import '../../bloc/tunings_cubit/tunings_cubit.dart';
 import '../../widgets/dialogs.dart';
@@ -25,11 +26,12 @@ class _TunerPageState extends State<TunerPage> {
   List<String> chars = [];
 
 
-
+  late bool isLightmode;
 
   @override
   void initState() {
     super.initState();
+    isLightmode = BlocProvider.of<ThemeCubit>(context).state;
     recordPerm();
   }
 
@@ -66,9 +68,9 @@ class _TunerPageState extends State<TunerPage> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: AppColors.charcoal,
+        backgroundColor: isLightmode? AppColors.white : AppColors.charcoal,
         body: Container(
-          color: AppColors.charcoal,
+          color: isLightmode? AppColors.white : AppColors.charcoal,
           child: BlocBuilder<TunerBloc, TunerState>(
             builder: (context, state) {
               return Center(
@@ -108,9 +110,8 @@ class _TunerPageState extends State<TunerPage> {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () {
-                        },
-                        icon: const Icon(Icons.abc_outlined)
+                        onPressed: null,
+                        icon: Icon(Icons.abc_outlined, color: isLightmode? AppColors.white :  AppColors.charcoal, )
                       ),
                     ],
                   ),
@@ -220,14 +221,14 @@ class _TunerPageState extends State<TunerPage> {
                                           : 0,
                       needleStartWidth: 1,
                       needleEndWidth: 5,
-                      needleColor: Colors.white,
+                      needleColor: isLightmode? AppColors.charcoal : AppColors.white,
                       animationDuration: 500,
                       enableAnimation: true,
-                      knobStyle: const KnobStyle(
+                      knobStyle: KnobStyle(
                           knobRadius: 0.09,
-                          borderColor: Colors.white,
+                          borderColor: isLightmode? AppColors.charcoal : AppColors.white,
                           borderWidth: 0.02,
-                          color: Colors.black))
+                          color: AppColors.white))
                 ])
           ],
         );
@@ -279,14 +280,16 @@ class _TunerPageState extends State<TunerPage> {
                   color: Colors.white.withOpacity(0.3),
                   child: Column(
                     children:   [
-                      const Text('Select Instrument',style: TextStyle(
-                        color: Colors.white
+                      Text('Select Instrument',style: TextStyle(
+                        color:  isLightmode? AppColors.charcoal : AppColors.white
                       ),),
-                       Text( state.data.data[selectedIntrumentIndex].instrument[0].toUpperCase()+state.data.data[selectedIntrumentIndex].instrument.substring(1).toLowerCase(),style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300
-                      ),),
+                       Text( state.data.data[selectedIntrumentIndex].instrument[0].toUpperCase()+state.data.data[selectedIntrumentIndex].instrument.substring(1).toLowerCase(),
+                        style: TextStyle(
+                          color: isLightmode? AppColors.charcoal : AppColors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -325,11 +328,12 @@ class _TunerPageState extends State<TunerPage> {
                   color: Colors.white.withOpacity(0.3),
                   child: Column(
                     children:  [
-                      const Text('Select Tuning',style: TextStyle(
-                        color: Colors.white
+                      Text('Select Tuning',style: TextStyle(
+                        color: isLightmode? AppColors.charcoal : AppColors.white
                       ),),
-                      Text( state.data.data[selectedIntrumentIndex].tunings[selectedTuningIndex].name,style: const TextStyle(
-                        color: Colors.white,
+                      Text( state.data.data[selectedIntrumentIndex].tunings[selectedTuningIndex].name,style:
+                      TextStyle(
+                        color: isLightmode? AppColors.charcoal : AppColors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.w300
                       ),),
@@ -347,8 +351,8 @@ class _TunerPageState extends State<TunerPage> {
 
                     (index) => Text(
                           state.data.data[selectedIntrumentIndex].tunings[selectedTuningIndex].notes[index],
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 30),
+                          style: TextStyle(
+                              color:  isLightmode? AppColors.charcoal : AppColors.white, fontSize: 30),
                         ))
               ],
             ),
