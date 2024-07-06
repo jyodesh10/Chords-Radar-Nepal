@@ -82,7 +82,7 @@ class _SplashPageState extends State<SplashPage> {
                       animatedTexts: [
                         FadeAnimatedText(
                           "Nepali Music Chords", 
-                          textStyle: subtitleStyle.copyWith(fontSize: 18),
+                          textStyle: subtitleStyle.copyWith(fontSize: 18, color: isLightmode ? AppColors.charcoal: AppColors.neonBlue),
                           // speed: const Duration(
                           //   milliseconds: 120
                           // )

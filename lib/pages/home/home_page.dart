@@ -64,89 +64,107 @@ class _HomePageState extends State<HomePage> {
       SharedPref.write("isFirstTime", false);
       SharedPref.write("isLightTheme", true);
       Future.delayed(
-          const Duration(seconds: 1),
-          () => showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => WillPopScope(
-                  onWillPop: () async => false,
-                  child: Dialog(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    backgroundColor: AppColors.charcoal,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Add Username",
-                          style: titleStyle.copyWith(color: AppColors.neonBlue),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Form(
-                            key: formKey,
-                            child: TextFormField(
-                              controller: namecontroller,
-                              textInputAction: TextInputAction.done,
-                              style: titleStyle,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "*required";
-                                }
-                                return null;
-                              },
-                              onFieldSubmitted: (value) {
-                                if (formKey.currentState!.validate()) {
-                                  SharedPref.write("username",
-                                          value.trim().capitalizeWords())
-                                      .whenComplete(() {
-                                    setState(() {});
-                                    namecontroller.clear();
-                                    Navigator.pop(context);
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        MaterialButton(
-                            color: AppColors.deepTeal,
-                            child: Text(
-                              "Submit",
-                              style: titleStyle,
-                            ),
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                SharedPref.write(
-                                        "username",
-                                        namecontroller.text
-                                            .trim()
-                                            .capitalizeWords())
-                                    .whenComplete(() {
-                                  setState(() {});
-                                  namecontroller.clear();
-                                  Navigator.pop(context);
-                                });
-                              }
-                            }),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
+        const Duration(seconds: 1),
+        () => 
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => WillPopScope(
+              onWillPop: () async => true,
+              child: Dialog(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                backgroundColor: AppColors.charcoal,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
+                    Text(
+                      "Add Username",
+                      style: titleStyle.copyWith(color: AppColors.neonBlue),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Form(
+                        key: formKey,
+                        child: TextFormField(
+                          controller: namecontroller,
+                          textInputAction: TextInputAction.done,
+                          style: titleStyle,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "";
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (value) {
+                            if (formKey.currentState!.validate()) {
+                              SharedPref.write("username",
+                                      value.trim().capitalizeWords())
+                                  .whenComplete(() {
+                                setState(() {});
+                                namecontroller.clear();
+                                Navigator.pop(context);
+                              });
+                            } else {
+                              SharedPref.write("username",
+                                      "User")
+                                  .whenComplete(() {
+                                setState(() {});
+                                namecontroller.clear();
+                                Navigator.pop(context);
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    MaterialButton(
+                        color: AppColors.deepTeal,
+                        child: Text(
+                          "Submit",
+                          style: titleStyle,
+                        ),
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            SharedPref.write(
+                                    "username",
+                                    namecontroller.text
+                                        .trim()
+                                        .capitalizeWords())
+                                .whenComplete(() {
+                              setState(() {});
+                              namecontroller.clear();
+                              Navigator.pop(context);
+                            });
+                          } else {
+                            SharedPref.write("username",
+                                    "User")
+                                .whenComplete(() {
+                              setState(() {});
+                              namecontroller.clear();
+                              Navigator.pop(context);
+                            });
+                          }
+                        }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
-              ));
+              ),
+            ),
+          )
+      );
     }
   }
 
