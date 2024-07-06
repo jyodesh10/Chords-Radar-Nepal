@@ -1,8 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
+import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../../widgets/snackbar_widget.dart';
 import '../home/home_page.dart';
 import '../saved_songs/saved_songs_page.dart';
@@ -15,10 +17,12 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  late bool isLightmode;
 
   @override
   void initState() {
     super.initState();
+    isLightmode = BlocProvider.of<ThemeCubit>(context).state;
     Future.delayed(const Duration(milliseconds: 1880), () async {
       final result = await checkConnection();
       if(result){
@@ -43,7 +47,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: AppColors.charcoal,
+        color: isLightmode ? AppColors.white :AppColors.charcoal,
         alignment: Alignment.center,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

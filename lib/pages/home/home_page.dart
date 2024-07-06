@@ -3,7 +3,6 @@ import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/helpers/firebase_helper.dart';
 import 'package:chord_radar_nepal/pages/saved_songs/saved_songs_page.dart';
 import 'package:chord_radar_nepal/pages/search/search_page.dart';
-import 'package:chord_radar_nepal/pages/song_chord/songchord_page.dart';
 import 'package:chord_radar_nepal/pages/tuner/tuner_page.dart';
 import 'package:chord_radar_nepal/utils/shared_pref.dart';
 import 'package:chord_radar_nepal/widgets/dialogs.dart';
@@ -20,6 +19,7 @@ import '../../bloc/scroll_top_cubit/scrolltop_cubit.dart';
 import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../../model/songs_model.dart';
 import '../../widgets/time_greetings.dart';
+import '../song_chord/songchord_page.dart';
 import 'add_songs_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
     if (SharedPref.read("isFirstTime") == null ||
         SharedPref.read("isFirstTime") == true) {
       SharedPref.write("isFirstTime", false);
+      SharedPref.write("isLightTheme", true);
       Future.delayed(
           const Duration(seconds: 1),
           () => showDialog(
@@ -372,7 +373,7 @@ class _HomePageState extends State<HomePage> {
             child: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 if (state is HomeLoadingState) {
-                  return _buildLoading();
+                  return _buildLoading(isLightmode);
                 }
                 if (state is HomeLoadedState) {
                   final result = state.songs;
@@ -607,7 +608,7 @@ class _HomePageState extends State<HomePage> {
                         : const Icon(
                           FluentIcons.weather_moon_48_filled,
                           size: 35,
-                          color: AppColors.charcoal,
+                          color: AppColors.gunmetal,
                         )
                       ))
             ],
@@ -662,7 +663,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildLoading() {
+  Widget _buildLoading(bool isLightmode) {
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height,
@@ -675,22 +676,22 @@ class _HomePageState extends State<HomePage> {
               child: Container(
             padding: const EdgeInsets.all(20),
             alignment: Alignment.centerLeft,
-            color: AppColors.charcoal,
+            color: isLightmode? AppColors.white: AppColors.charcoal,
             child: ListView.builder(
                 itemCount: 20,
                 itemBuilder: (context, index) => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade500.withOpacity(0.7),
-                      highlightColor: Colors.grey.shade200.withOpacity(0.6),
+                      baseColor: Colors.grey.shade500.withOpacity(0.4),
+                      highlightColor: Colors.grey.shade200.withOpacity(0.5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             height: 10,
-                            width: 250,
+                            width: MediaQuery.of(context).size.width-60,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(3)),
                           ),
                           Container(
                             margin: const EdgeInsets.only(bottom: 5),
@@ -698,7 +699,7 @@ class _HomePageState extends State<HomePage> {
                             width: 150,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(3)),
                           ),
                         ],
                       ),

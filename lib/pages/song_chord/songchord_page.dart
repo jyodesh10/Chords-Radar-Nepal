@@ -129,7 +129,7 @@ class _SongchordPageState extends State<SongchordPage> {
                                     controller
                                         .animateTo(200,
                                             duration: const Duration(milliseconds: 250),
-                                            curve: Curves.ease)
+                                            curve: Curves.linear)
                                         .whenComplete(() => animate());
                                     setState(() {
                                       autoScroll = true;
@@ -191,46 +191,6 @@ class _SongchordPageState extends State<SongchordPage> {
                                 )
                               ],
                             ),
-                            // ListTile(
-                            //   leading: IconButton(
-                            //     onPressed: () {
-                            //       Navigator.pop(context);
-                            //     },
-                            //     icon: const Icon(
-                            //       FluentIcons.arrow_circle_left_48_regular,
-                            //       size: 40,
-                            //       color: AppColors.charcoal,
-                            //     ),
-                            //   ),
-                            //   title: Text(
-                            //     widget.song.title,
-                            //     overflow: TextOverflow.ellipsis,
-                            //     style: titleStyle,
-                            //   ),
-                            //   trailing: IconButton(
-                            //     onPressed: () {
-                            //       controller
-                            //           .animateTo(200,
-                            //               duration: const Duration(milliseconds: 250),
-                            //               curve: Curves.ease)
-                            //           .whenComplete(() => animate());
-                            //       setState(() {
-                            //         autoScroll = true;
-                            //       });
-                            //     },
-                            //     tooltip: "Autoplay",
-                            //     icon: Row(
-                            //       children: [
-                            //         // const Icon(
-                            //         //   FluentIcons.play_circle_48_regular,
-                            //         //   size: 20,
-                            //         //   color: AppColors.charcoal,
-                            //         // ),
-                            //         Text("Autoplay", style: subtitleStyle.copyWith(fontSize: 12),)
-                            //       ],
-                            //     ),
-                            //   ),
-                            // )
                           ],
                         ),
                       ),
@@ -404,7 +364,7 @@ class _SongchordPageState extends State<SongchordPage> {
                         autoScroll = false;
                         controller.animateTo(0,
                             duration: const Duration(milliseconds: 250),
-                            curve: Curves.ease);
+                            curve: Curves.linear);
                       });
                     },
                     tooltip: "Cancel Autoplay",
@@ -443,7 +403,7 @@ class _SongchordPageState extends State<SongchordPage> {
                   (controller.position.maxScrollExtent.round().toInt() /
                           scrollTime)
                       .round()),
-          curve: Curves.ease);
+          curve: Curves.linear);
     });
   }
 }

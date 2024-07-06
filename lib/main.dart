@@ -51,13 +51,13 @@ class MyApp extends StatelessWidget {
           create: (context) => ScrolltopCubit(),
         ),
         BlocProvider<ThemeCubit>(
-          create: (context) => ThemeCubit(),
+          create: (context) => ThemeCubit()..lightmode(SharedPref.read("isLightTheme")??true),
         ),
       ],
       child: MaterialApp(
         title: 'Chords Radar',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.deepTeal),
           useMaterial3: true,
         ),
         home: const SplashPage(),
