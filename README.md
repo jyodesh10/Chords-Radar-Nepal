@@ -1,6 +1,8 @@
 
 # Chords Radar - Nepali Guitar Chords Application
 
+<img src='/assets/logo.png' width=20% />
+
 Chords Radar is a user-friendly Nepali guitar chords application that aims to simplify the process of learning and playing your favorite Nepali songs on the guitar. Whether you're a beginner or an experienced guitarist, Chords Radar provides a comprehensive set of features to enhance your musical journey.
 
 ## Features:
