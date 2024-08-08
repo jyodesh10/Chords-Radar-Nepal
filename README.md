@@ -15,10 +15,10 @@ Chords Radar is a user-friendly Nepali guitar chords application that aims to si
 ## Screenshots:
 <div align='center'>
 <div>
-<img src='/screenshots/1.png' width=20% />
+<!-- <img src='/screenshots/1.png' width=20% />
 <img src='/screenshots/2.png' width=20% />
 <img src='/screenshots/3.png' width=20% />
-<img src='/screenshots/4.png' width=20% />
+<img src='/screenshots/4.png' width=20% /> -->
 </div>
 </div>
 
