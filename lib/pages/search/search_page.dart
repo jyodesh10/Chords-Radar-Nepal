@@ -9,9 +9,8 @@ import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../song_chord/songchord_page.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.query, required this.songsList});
+  const SearchPage({super.key, required this.songsList});
 
-  final String query;
   final List<SongsModel> songsList;
 
   @override
@@ -26,9 +25,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    searchProduct(widget.query);
+    // searchProduct(widget.query);
     isLightmode = BlocProvider.of<ThemeCubit>(context).state;
-    searchCon.text = widget.query;
+    // searchCon.text = widget.query;
     
   }
 
@@ -109,7 +108,11 @@ class _SearchPageState extends State<SearchPage> {
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.search,
+                  autofocus: true,
                   onSubmitted: (value) {
+                    searchProduct(value);
+                  },
+                  onChanged: (value) {
                     searchProduct(value);
                   },
                   decoration: InputDecoration(

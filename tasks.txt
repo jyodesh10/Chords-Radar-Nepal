@@ -5,3 +5,6 @@ chords view
 
 home view
 --  implement scroll with alphabets with scroll bar when sorting with tile
+
+
+--- search suggestion
