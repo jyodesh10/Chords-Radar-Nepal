@@ -5,6 +5,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/recent_cubit/recent_cubit.dart';
 import '../../bloc/theme_cubit/theme_cubit.dart';
 import '../song_chord/songchord_page.dart';
 
@@ -155,6 +156,18 @@ class _SearchPageState extends State<SearchPage> {
                           song: searchResult[index]
                           ),
                     ));
+                context
+                    .read<RecentCubit>()
+                    .addRecent(
+                        docId: searchResult[index].docId,
+                        artist:
+                            searchResult[index].artist,
+                        title: searchResult[index].title,
+                        album: searchResult[index].album,
+                        category:
+                            searchResult[index].category,
+                        content:
+                            searchResult[index].content);
               },
               title: Text(
                 searchResult[index].title.toString(),

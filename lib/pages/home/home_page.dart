@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
+import 'package:chord_radar_nepal/bloc/recent_cubit/recent_cubit.dart';
 import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/helpers/firebase_helper.dart';
 import 'package:chord_radar_nepal/pages/saved_songs/saved_songs_page.dart';
@@ -38,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     getPermissions();
     checkFirstTime();
     buildversion();
-    checkRecent();
+    // checkRecent();
     controller = ScrollController()
       ..addListener(() {
         if (controller.offset >= 700) {
@@ -47,7 +46,6 @@ class _HomePageState extends State<HomePage> {
           context.read<ScrolltopCubit>().scrollToTop(false);
         }
       });
-
   }
 
   List<SongsModel> favs = [];
@@ -68,107 +66,103 @@ class _HomePageState extends State<HomePage> {
       SharedPref.write("isFirstTime", false);
       SharedPref.write("isLightTheme", true);
       Future.delayed(
-        const Duration(seconds: 1),
-        () => 
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) => WillPopScope(
-              onWillPop: () async => true,
-              child: Dialog(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                backgroundColor: AppColors.charcoal,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Add Username",
-                      style: titleStyle.copyWith(color: AppColors.neonBlue),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Form(
-                        key: formKey,
-                        child: TextFormField(
-                          controller: namecontroller,
-                          textInputAction: TextInputAction.done,
-                          style: titleStyle,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "";
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (value) {
-                            if (formKey.currentState!.validate()) {
-                              SharedPref.write("username",
-                                      value.trim().capitalizeWords())
-                                  .whenComplete(() {
-                                setState(() {});
-                                namecontroller.clear();
-                                Navigator.pop(context);
-                              });
-                            } else {
-                              SharedPref.write("username",
-                                      "User")
-                                  .whenComplete(() {
-                                setState(() {});
-                                namecontroller.clear();
-                                Navigator.pop(context);
-                              });
-                            }
-                          },
+          const Duration(seconds: 1),
+          () => showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => WillPopScope(
+                  onWillPop: () async => true,
+                  child: Dialog(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    backgroundColor: AppColors.charcoal,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          height: 20,
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    MaterialButton(
-                        color: AppColors.deepTeal,
-                        child: Text(
-                          "Submit",
-                          style: titleStyle,
+                        Text(
+                          "Add Username",
+                          style: titleStyle.copyWith(color: AppColors.neonBlue),
                         ),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            SharedPref.write(
-                                    "username",
-                                    namecontroller.text
-                                        .trim()
-                                        .capitalizeWords())
-                                .whenComplete(() {
-                              setState(() {});
-                              namecontroller.clear();
-                              Navigator.pop(context);
-                            });
-                          } else {
-                            SharedPref.write("username",
-                                    "User")
-                                .whenComplete(() {
-                              setState(() {});
-                              namecontroller.clear();
-                              Navigator.pop(context);
-                            });
-                          }
-                        }),
-                    const SizedBox(
-                      height: 20,
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Form(
+                            key: formKey,
+                            child: TextFormField(
+                              controller: namecontroller,
+                              textInputAction: TextInputAction.done,
+                              style: titleStyle,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "";
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (value) {
+                                if (formKey.currentState!.validate()) {
+                                  SharedPref.write("username",
+                                          value.trim().capitalizeWords())
+                                      .whenComplete(() {
+                                    setState(() {});
+                                    namecontroller.clear();
+                                    Navigator.pop(context);
+                                  });
+                                } else {
+                                  SharedPref.write("username", "User")
+                                      .whenComplete(() {
+                                    setState(() {});
+                                    namecontroller.clear();
+                                    Navigator.pop(context);
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        MaterialButton(
+                            color: AppColors.deepTeal,
+                            child: Text(
+                              "Submit",
+                              style: titleStyle,
+                            ),
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                SharedPref.write(
+                                        "username",
+                                        namecontroller.text
+                                            .trim()
+                                            .capitalizeWords())
+                                    .whenComplete(() {
+                                  setState(() {});
+                                  namecontroller.clear();
+                                  Navigator.pop(context);
+                                });
+                              } else {
+                                SharedPref.write("username", "User")
+                                    .whenComplete(() {
+                                  setState(() {});
+                                  namecontroller.clear();
+                                  Navigator.pop(context);
+                                });
+                              }
+                            }),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          )
-      );
+              ));
     }
   }
 
@@ -196,18 +190,6 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  List recentlist = [];
-
-  checkRecent() {
-    recentlist.clear();
-    var recentprevdata = SharedPref.read("recent");
-    if(recentprevdata != null) {
-      Map data = jsonDecode(recentprevdata);
-      recentlist.addAll(data["data"]);
-      recentlist = recentlist.reversed.toList();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, bool>(
@@ -219,7 +201,7 @@ class _HomePageState extends State<HomePage> {
           //   title: const Text("Chord Radar Nepal"),
           // ),
           drawer: Drawer(
-            backgroundColor: isLightmode? AppColors.white : AppColors.charcoal,
+            backgroundColor: isLightmode ? AppColors.white : AppColors.charcoal,
             child: Column(
               children: [
                 DrawerHeader(
@@ -255,13 +237,17 @@ class _HomePageState extends State<HomePage> {
                             )),
                         leading: Icon(
                           FluentIcons.arrow_circle_down_right_24_regular,
-                          color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
-
+                          color: isLightmode
+                              ? AppColors.gunmetal
+                              : AppColors.white.withOpacity(0.8),
                         ),
                         title: Text(
                           "Saved",
-                          style: titleStyle.copyWith(fontSize: 18,
-                            color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
+                          style: titleStyle.copyWith(
+                            fontSize: 18,
+                            color: isLightmode
+                                ? AppColors.gunmetal
+                                : AppColors.white.withOpacity(0.8),
                           ),
                         ),
                       );
@@ -277,13 +263,17 @@ class _HomePageState extends State<HomePage> {
                       )),
                   leading: Icon(
                     FluentIcons.music_note_1_24_regular,
-                    color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
+                    color: isLightmode
+                        ? AppColors.gunmetal
+                        : AppColors.white.withOpacity(0.8),
                   ),
                   title: Text(
                     "Tuner",
                     style: titleStyle.copyWith(
                       fontSize: 18,
-                      color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
+                      color: isLightmode
+                          ? AppColors.gunmetal
+                          : AppColors.white.withOpacity(0.8),
                     ),
                   ),
                 ),
@@ -295,13 +285,17 @@ class _HomePageState extends State<HomePage> {
                   },
                   leading: Icon(
                     FluentIcons.share_24_regular,
-                    color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
+                    color: isLightmode
+                        ? AppColors.gunmetal
+                        : AppColors.white.withOpacity(0.8),
                   ),
-                  title:
-                      Text("Share", style: titleStyle.copyWith(
+                  title: Text("Share",
+                      style: titleStyle.copyWith(
                         fontSize: 18,
-                        color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
-                        )),
+                        color: isLightmode
+                            ? AppColors.gunmetal
+                            : AppColors.white.withOpacity(0.8),
+                      )),
                 ),
                 ListTile(
                   onTap: () {
@@ -371,6 +365,7 @@ class _HomePageState extends State<HomePage> {
                                           .validate()) {
                                         FirebaseHelper().addRequest(
                                             context,
+                                            SharedPref.read("username") ?? "User",
                                             artistcontroller.text,
                                             songcontroller.text);
                                       }
@@ -385,13 +380,17 @@ class _HomePageState extends State<HomePage> {
                   },
                   leading: Icon(
                     FluentIcons.more_circle_24_regular,
-                    color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
+                    color: isLightmode
+                        ? AppColors.gunmetal
+                        : AppColors.white.withOpacity(0.8),
                   ),
                   title: Text("Request For Song Chords",
                       style: titleStyle.copyWith(
                         fontSize: 18,
-                        color:  isLightmode? AppColors.gunmetal : AppColors.white.withOpacity(0.8),
-                        )),
+                        color: isLightmode
+                            ? AppColors.gunmetal
+                            : AppColors.white.withOpacity(0.8),
+                      )),
                 ),
                 const Spacer(),
                 Text(
@@ -434,11 +433,14 @@ class _HomePageState extends State<HomePage> {
                                     buildRecentTile(isLightmode),
                                     ListView.builder(
                                       shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       itemCount: result.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
-                                          tileColor: isLightmode? AppColors.white : AppColors.charcoal,
+                                          tileColor: isLightmode
+                                              ? AppColors.white
+                                              : AppColors.charcoal,
                                           onTap: () {
                                             Navigator.push(
                                                 context,
@@ -447,46 +449,20 @@ class _HomePageState extends State<HomePage> {
                                                       SongchordPage(
                                                           song: result[index]),
                                                 ));
-                                            Future.delayed(const Duration(seconds: 1), () {
-                                              var recentprevdata = SharedPref.read("recent");
-                                              if(recentprevdata == null) {
-                                                SharedPref.write("recent", {
-                                                  "data" : [
-                                                    {
-                                                      "docId": result[index].docId,
-                                                      "artist": result[index].artist,
-                                                      "title": result[index].title,
-                                                      "album": result[index].album,
-                                                      "date": DateTime.now().toString(),
-                                                      "category": result[index].category,
-                                                      "content": result[index].content
-                                                    }
-                                                  ]
-                                                });
-                                                setState(() {
-                                                  checkRecent();
-                                                });
-                                              } else {
-                                                Map oldData = jsonDecode(recentprevdata);
-                                                if(oldData['data'].map((e) => e["docId"]).toList().contains(result[index].docId)){
-                                                  oldData['data'].removeWhere((element) => element["docId"] == result[index].docId);
-                                                }
-                                                oldData['data'].add({
-                                                  "docId": result[index].docId,
-                                                  "artist": result[index].artist,
-                                                  "title": result[index].title,
-                                                  "album": result[index].album,
-                                                  "date": DateTime.now().toString(),
-                                                  "category": result[index].category,
-                                                  "content": result[index].content           
-                                                });
-                                                Map newData = oldData;
-                                                SharedPref.write("recent", newData);
-                                                setState(() {
-                                                  checkRecent();
-                                                });
-                                              }
-                                            },);
+                                            Future.delayed(const Duration(milliseconds: 500), () {
+                                              context
+                                                  .read<RecentCubit>()
+                                                  .addRecent(
+                                                      docId: result[index].docId,
+                                                      artist:
+                                                          result[index].artist,
+                                                      title: result[index].title,
+                                                      album: result[index].album,
+                                                      category:
+                                                          result[index].category,
+                                                      content:
+                                                          result[index].content);
+                                            });
                                           },
                                           title: Hero(
                                             tag: result[index].docId,
@@ -495,7 +471,11 @@ class _HomePageState extends State<HomePage> {
                                               child: Text(
                                                 result[index].title.toString(),
                                                 style: titleStyle.copyWith(
-                                                    color:  isLightmode? AppColors.gunmetal.withOpacity(0.8) : AppColors.white.withOpacity(0.8),
+                                                    color: isLightmode
+                                                        ? AppColors.gunmetal
+                                                            .withOpacity(0.8)
+                                                        : AppColors.white
+                                                            .withOpacity(0.8),
                                                     fontSize: 15),
                                               ),
                                             ),
@@ -674,24 +654,23 @@ class _HomePageState extends State<HomePage> {
               BlocBuilder<ThemeCubit, bool>(
                   builder: (context, state) => IconButton(
                       onPressed: () {
-                        if(state) {
+                        if (state) {
                           context.read<ThemeCubit>().lightmode(false);
                         } else {
                           context.read<ThemeCubit>().lightmode(true);
                         }
                       },
-                      icon: state 
-                        ? const Icon(
-                          FluentIcons.weather_sunny_48_filled,
-                          size: 35,
-                          color: AppColors.amber,
-                        )
-                        : const Icon(
-                          FluentIcons.weather_moon_48_filled,
-                          size: 35,
-                          color: AppColors.gunmetal,
-                        )
-                      ))
+                      icon: state
+                          ? const Icon(
+                              FluentIcons.weather_sunny_48_filled,
+                              size: 35,
+                              color: AppColors.amber,
+                            )
+                          : const Icon(
+                              FluentIcons.weather_moon_48_filled,
+                              size: 35,
+                              color: AppColors.gunmetal,
+                            )))
             ],
           ),
           const SizedBox(
@@ -709,7 +688,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => SearchPage(
                           songsList: songs,
                         ),
-                      ));     
+                      ));
                 },
                 child: TextField(
                   style: subtitleStyle.copyWith(color: AppColors.white),
@@ -730,12 +709,12 @@ class _HomePageState extends State<HomePage> {
                   },
                   onChanged: (value) {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchPage(
-                          songsList: songs,
-                        ),
-                    ));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchPage(
+                            songsList: songs,
+                          ),
+                        ));
                   },
                   decoration: InputDecoration(
                       hintText: "Search songs & artist..",
@@ -777,7 +756,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
             padding: const EdgeInsets.all(20),
             alignment: Alignment.centerLeft,
-            color: isLightmode? AppColors.white: AppColors.charcoal,
+            color: isLightmode ? AppColors.white : AppColors.charcoal,
             child: ListView.builder(
                 itemCount: 20,
                 itemBuilder: (context, index) => Shimmer.fromColors(
@@ -789,7 +768,7 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             height: 10,
-                            width: MediaQuery.of(context).size.width-60,
+                            width: MediaQuery.of(context).size.width - 60,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(3)),
@@ -811,94 +790,104 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  
   buildRecentTile(bool isLightmode) {
-    return recentlist.isEmpty 
-      ? const SizedBox()
-      : Container(
-        height: 120,
-        width: double.infinity,
-        color: isLightmode? AppColors.white : AppColors.charcoal,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Text("Recent", style: titleStyle.copyWith(fontSize: 18, color:  isLightmode? AppColors.gunmetal.withOpacity(0.8) : AppColors.white,),),
-            ),
-            Container(
-              height: 80,
-              width: double.infinity,
-              color: isLightmode? AppColors.white : AppColors.charcoal,
-              child: ListView.separated(
-                itemCount: recentlist.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                SongchordPage(
-                                    song: SongsModel(
-                                      id: 0, 
-                                      docId: recentlist[index]['docId'], 
-                                      artist: recentlist[index]['artist'], 
-                                      title: recentlist[index]['title'], 
-                                      album: recentlist[index]['album'], 
-                                      timeStamp: DateTime.parse(recentlist[index]['date']), 
-                                      category: recentlist[index]['category'], 
-                                      content: recentlist[index]['content']
-                                    ) 
-                                ),
-                          ));
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 60,
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: isLightmode? AppColors.black.withOpacity(0.06) : AppColors.gunmetal,
-                        borderRadius: BorderRadius.circular(15)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            recentlist[index]['title'],
-                            style: titleStyle.copyWith(
-                              color:  isLightmode? AppColors.gunmetal.withOpacity(0.8) : AppColors.white.withOpacity(0.8),
-                              fontSize: 12,
-                              overflow: TextOverflow.ellipsis
-                            ),
-                          ),
-                          Text(
-                            recentlist[index]['artist'],
-                            style: subtitleStyle.copyWith(
-                              fontSize: 12,
-                              overflow: TextOverflow.ellipsis
-                            ),
-                          ),
-                        ]
-                      ),
+    return BlocBuilder<RecentCubit, RecentState>(
+      builder: (context, state) {
+        if(state is LoadRecentState) {
+          return Container(
+            height: 120,
+            width: double.infinity,
+            color: isLightmode ? AppColors.white : AppColors.charcoal,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Recent",
+                    style: titleStyle.copyWith(
+                      fontSize: 18,
+                      color: isLightmode
+                          ? AppColors.gunmetal.withOpacity(0.8)
+                          : AppColors.white.withOpacity(0.9),
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(
-                    width: 12,
-                  );
-                },
-              ),
+                  ),
+                ),
+                Container(
+                  height: 80,
+                  width: double.infinity,
+                  color: isLightmode ? AppColors.white : AppColors.charcoal,
+                  child: ListView.separated(
+                    itemCount: state.recentList.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SongchordPage(
+                                    song: SongsModel(
+                                        id: 0,
+                                        docId: state.recentList[index]['docId'],
+                                        artist: state.recentList[index]['artist'],
+                                        title: state.recentList[index]['title'],
+                                        album: state.recentList[index]['album'],
+                                        timeStamp: DateTime.parse(
+                                            state.recentList[index]['date']),
+                                        category: state.recentList[index]['category'],
+                                        content: state.recentList[index]['content'])),
+                              ));
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 60,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                              color: isLightmode
+                                  ? AppColors.black.withOpacity(0.06)
+                                  : AppColors.gunmetal,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  state.recentList[index]['title'],
+                                  style: titleStyle.copyWith(
+                                      color: isLightmode
+                                          ? AppColors.gunmetal.withOpacity(0.8)
+                                          : AppColors.white.withOpacity(0.8),
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                                Text(
+                                  state.recentList[index]['artist'],
+                                  style: subtitleStyle.copyWith(
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ]),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(
+                        width: 12,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          );
+        }
+        return const SizedBox();
+      },
+    );
   }
 }

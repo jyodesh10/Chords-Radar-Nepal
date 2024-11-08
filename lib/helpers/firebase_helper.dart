@@ -52,10 +52,12 @@ class FirebaseHelper {
   }
 
 
-  Future<void> addRequest(BuildContext context, String artist, String song) async {
+  Future<void> addRequest(BuildContext context,username, String artist, String song) async {
     await requests.add({
+      "username": username,
       "artist" : artist,
       "song" : song,
+      "request_date" : DateTime.now()
     }).whenComplete(() {
       Navigator.pop(context);
       showSnackbar(context, "request sent");

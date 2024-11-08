@@ -1,5 +1,6 @@
 import 'package:chord_radar_nepal/bloc/favorite_cubit/favorites_cubit.dart';
 import 'package:chord_radar_nepal/bloc/home_bloc/home_bloc.dart';
+import 'package:chord_radar_nepal/bloc/recent_cubit/recent_cubit.dart';
 import 'package:chord_radar_nepal/constants/constants.dart';
 import 'package:chord_radar_nepal/pages/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,6 +53,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ThemeCubit>(
           create: (context) => ThemeCubit()..lightmode(SharedPref.read("isLightTheme")??true),
+        ),
+        BlocProvider<RecentCubit>(
+          create: (context) => RecentCubit()..checkRecent(),
         ),
       ],
       child: MaterialApp(
